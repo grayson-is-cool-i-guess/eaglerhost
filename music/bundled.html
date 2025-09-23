@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Juicy - Media Player</title>
+<link href="data:;base64,iVBORw0KGgo=" rel="icon"/>
+<style>:root {
+  --bg: #0f1114;
+  --panel: #121212;
+  --muted: #b3b3b3;
+  --accent: #1db954;
+  --glass: rgba(255, 255, 255, 0.03);
+  --radius: 12px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  color: #e6e6e6;
+  background: linear-gradient(180deg, #0b0b0b, #0f1114);
+}
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 18px;
+  height: 100vh;
+  padding: 18px;
+}
+.card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(0, 0, 0, 0.03)
+  );
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6);
+}
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+}
+.logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #06140a;
+}
+.search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.search input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 0;
+  background: var(--glass);
+  color: inherit;
+}
+.albums {
+  overflow: auto;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: calc(100vh - 240px);
+}
+.album {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.album:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.album img {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #222;
+}
+.album .meta {
+  font-size: 13px;
+}
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.now {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.cover {
+  width: 220px;
+  height: 220px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #1b1b1b, #0f0f0f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.now-info {
+  flex: 1;
+}
+.now-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+.now-sub {
+  color: var(--muted);
+  margin-top: 6px;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.btn {
+  background: transparent;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: inherit;
+  cursor: pointer;
+}
+.btn.primary {
+  background: var(--accent);
+  color: #03120a;
+  font-weight: 700;
+}
+.bigplay {
+  font-size: 18px;
+  padding: 14px 18px;
+  border-radius: 12px;
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.progress input[type="range"] {
+  width: 100%;
+}
+.time {
+  font-family: var(--mono);
+  color: var(--muted);
+  width: 56px;
+  text-align: center;
+}
+.tracklist {
+  overflow: auto;
+  border-radius: 10px;
+  padding: 8px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.01));
+  flex: 1;
+}
+.track {
+  display: grid;
+  grid-template-columns: 36px 1fr 110px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.track:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.track.active {
+  background: linear-gradient(
+    90deg,
+    rgba(29, 185, 84, 0.08),
+    rgba(29, 185, 84, 0.04)
+  );
+  box-shadow: inset 0 0 0 1px rgba(29, 185, 84, 0.03);
+}
+.track .title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.title-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.queue .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.queue-list {
+  overflow: auto;
+  flex: 1;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qitem {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px;
+  border-radius: 8px;
+}
+.qitem img {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.small-muted {
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 1100px) {
+  .app {
+    grid-template-columns: 220px 1fr;
+    grid-auto-rows: 1fr;
+  }
+  .queue {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- left sidebar -->
+<div class="sidebar card">
+<div class="brand">
+<div class="logo">J!</div>
+<div>
+<div style="font-weight:700">Juicy</div>
+<div class="muted" style="font-size:12px">Juicy Client • Web Build</div>
+</div>
+</div>
+<div class="search">
+<input id="search" placeholder="Search albums or tracks..."/>
+<button class="btn" id="btn-refresh" title="Reload manifest">⟳</button>
+</div>
+<div class="muted" style="margin-top:6px">Albums</div>
+<div class="albums card" id="albums" role="list"></div>
+</div>
+<!-- main -->
+<div class="main card">
+<div class="now">
+<div class="cover" id="cover"><div class="muted">No album</div></div>
+<div class="now-info">
+<div class="now-title" id="now-title">Nothing playing</div>
+<div class="now-sub" id="now-sub">—</div>
+<div class="controls" style="margin-top:12px">
+<button class="btn" id="prev">⟸</button>
+<button class="btn primary bigplay" id="play">Play</button>
+<button class="btn" id="next">⟹</button>
+<div style="flex:1;display:flex;align-items:center;gap:8px;margin-left:8px">
+<button class="btn" id="shuffle">Shuffle</button>
+<button class="btn" id="repeat">Repeat</button>
+</div>
+<div style="display:flex;align-items:center;gap:6px">
+<input id="volume" max="1" min="0" step="0.01" style="width:110px" type="range" value="1"/>
+</div>
+</div>
+<div class="progress">
+<div class="time" id="current">0:00</div>
+<input id="seek" max="100" min="0" type="range" value="0"/>
+<div class="time" id="duration">0:00</div>
+</div>
+</div>
+</div>
+<div class="muted" style="margin-top:6px">Tracklist</div>
+<div class="tracklist" id="tracklist" role="list">
+<div class="muted">Open an album to view tracks.</div>
+</div>
+</div>
+<!-- queue -->
+<div class="queue card">
+<div class="header">
+<div style="font-weight:700">Queue</div>
+<div class="small-muted" id="queue-count">0</div>
+</div>
+<div class="queue-list" id="queue"></div>
+<div style="display:flex;gap:8px;justify-content:space-between">
+<button class="btn" id="clear-queue">Clear</button>
+<button class="btn" id="save-playlist">Save</button>
+</div>
+</div>
+</div>
+<audio id="audio" preload="metadata"></audio>
+<script>window.MANIFEST = {
+  zips: [
+
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20GNX%20(2024).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20Mr.%20Morale%20%26%20The%20Big%20Steppers%20(2022).zip",
+    "https://static.ishotupa.school/DAMN.zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20To%20Pimp%20A%20Butterfly%20(2015).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20good%20kid,%20m.A.A.d%20city%20(Deluxe)%20(2012).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20Section.80%20(2011).zip",
+
+    "https://static.ishotupa.school/Eminem%20-%20The%20Death%20of%20Slim%20Shady%20(Coup%20De%20Gr%C3%A2ce)%20(2024).zip",
+    "https://static.ishotupa.school/Eminem%20-%20Recovery%20(Clean)%20(2009).zip",
+    "https://static.ishotupa.school/Eminem%20-%20Curtain%20Call_%20The%20Hits%20(2005).zip",
+    "https://static.ishotupa.school/Eminem%20-%20The%20Eminem%20Show%20(2002).zip",
+
+    "https://static.ishotupa.school/Travis%20Scott%20-%20ASTROWORLD%20%20(2018).zip",
+
+    "https://static.ishotupa.school/Kanye%20West%20-%20ye%20(2018).zip",
+    "https://static.ishotupa.school/Kanye%20West%20-%20My%20Beautiful%20Dark%20Twisted%20Fantasy%20(2010).zip",
+    "https://static.ishotupa.school/Kanye%20West%20-%20Graduation%20(2007).zip",
+
+    "https://static.ishotupa.school/Arctic%20Monkeys%20-%20Favourite%20Worst%20Nightmare%20(Standard)%20(2007).zip",
+
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20DON'T%20TAP%20THE%20GLASS%20(2025).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CHROMAKOPIA%20(2024).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CALL%20ME%20IF%20YOU%20GET%20LOST_%20The%20Estate%20Sale%20(2023).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CALL%20ME%20IF%20YOU%20GET%20LOST%20(2021).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20IGOR%20(2019).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Flower%20Boy%20(2017).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Cherry%20Bomb%20(2015).zip",
+    "https://static.ishotupa.school/Wolf.zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Goblin%20(2011).zip",
+
+    "https://static.ishotupa.school/Don%20Toliver%20-%20HARDSTONE%20PSYCHO%20(2024).zip",
+
+    "https://static.ishotupa.school/Kali%20Uchis%20-%20Isolation%20(2018).zip",
+
+    "https://static.ishotupa.school/Juice%20WRLD%20-%20Death%20Race%20For%20Love%20(2019).zip",
+
+    "https://static.ishotupa.school/Lil%20Uzi%20Vert%20-%20Luv%20Is%20Rage%202%20(2017).zip",
+
+    "https://static.ishotupa.school/Lil%20Tecca%20-%20DOPAMINE%20(2025).zip",
+
+    "https://static.ishotupa.school/beabadoobee%20-%20Beatopia%20(2022).zip",
+
+    "https://static.ishotupa.school/TV%20Girl%20-%20Grapes%20Upon%20the%20Vine%20(2023).zip",
+    "https://static.ishotupa.school/TV%20Girl%20-%20Who%20Really%20Cares%20(2016).zip",
+    "https://static.ishotupa.school/TV%20Girl%20-%20French%20Exit%20(2014).zip",
+
+    "https://static.ishotupa.school/Imogen%20Heap%20-%20Speak%20for%20Yourself%20(Deluxe)%20(2005).zip",
+
+    "https://static.ishotupa.school/b%C3%B4a%20-%20Twilight%20(2001).zip",
+
+    "https://static.ishotupa.school/MF%20DOOM%20-%20MM..FOOD%20(2004).zip",
+
+    "https://static.ishotupa.school/J%C3%B8jo%20-%20ROMANCE%20DAWN%20(2024).zip",
+
+    "https://static.ishotupa.school/Glaive%20-%20May%20It%20Never%20Falter%20(2024).zip",
+    "https://static.ishotupa.school/Glaive%20-%20i%20care%20so%20much%20that%20i%20dont%20care%20at%20all%20(2023).zip",
+    "https://static.ishotupa.school/Glaive%20-%20cypress%20grove%20(2020).zip",
+
+    "https://static.ishotupa.school/Ericdoa%20-%20why%20suffer%20for%20us_%20(2024).zip",
+
+    "https://static.ishotupa.school/Lil%20Melo%20-%20ANGELS%20CRY%20TOO%20(2025).zip"
+  ]
+};
+</script>
+<script src="js/fflate.js"></script>
+<script src="js/metadatafinderdontremovethisisimportant.js"></script>
+<script>
+
+const Utils = { fmt, titleFromFilename, placeholder, base64ToUint8Array, parseFlacPictureBlock, loadDuration, resizeImage };
+
+function fmt(t) {
+  if (!isFinite(t)) return '0:00';
+  const s = Math.floor(t % 60).toString().padStart(2, '0');
+  const m = Math.floor(t / 60);
+  return `${m}:${s}`;
+}
+
+function titleFromFilename(fn) {
+  if (!fn) return 'Unknown';
+  fn = fn.split('/').pop();
+  fn = fn.replace(/\.[^.]+$/, '');
+  fn = fn.replace(/^\d+\s*[-._\s]*/, '');
+  return fn;
+}
+
+function placeholder(text) {
+  const c = document.createElement('canvas'); c.width = 400; c.height = 400;
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#161616'; ctx.fillRect(0, 0, 400, 400);
+  ctx.fillStyle = '#1db954'; ctx.font = 'bold 42px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText((text || 'Album').slice(0, 16), 200, 220);
+  return c.toDataURL();
+}
+
+function base64ToUint8Array(base64) {
+  const binary = atob(base64);
+  const len = binary.length;
+  const out = new Uint8Array(len);
+  for (let i = 0; i < len; i++) out[i] = binary.charCodeAt(i);
+  return out;
+}
+
+function parseFlacPictureBlock(u8) {
+  try {
+    const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    let p = 0;
+    function readUint32BE() { const v = dv.getUint32(p, false); p += 4; return v; }
+    readUint32BE();
+    const mimeLen = readUint32BE();
+    if (p + mimeLen > u8.length) return null;
+    const mime = new TextDecoder().decode(u8.subarray(p, p + mimeLen)); p += mimeLen;
+    const descLen = readUint32BE();
+    p += descLen;
+    readUint32BE(); readUint32BE(); readUint32BE(); readUint32BE();
+    const dataLen = readUint32BE();
+    if (p + dataLen > u8.length) return null;
+    const data = u8.subarray(p, p + dataLen);
+    return { mime, data };
+  } catch (e) {
+    console.warn('parseFlacPictureBlock failed', e);
+    return null;
+  }
+}
+
+async function loadDuration(track) {
+  if (track.duration) return track.duration;
+  return new Promise((resolve, reject) => {
+    const tmp = document.createElement('audio');
+    tmp.preload = 'metadata';
+    tmp.src = track.blobUrl;
+    const clean = () => { tmp.src = ''; tmp.remove(); };
+    tmp.addEventListener('loadedmetadata', () => {
+      const d = tmp.duration;
+      clean();
+      if (isFinite(d)) resolve(track.duration = d); else reject();
+    });
+    tmp.addEventListener('error', () => { clean(); reject(); });
+  });
+}
+
+async function resizeImage(blob, format) {
+  const img = new Image();
+  img.src = URL.createObjectURL(blob);
+  await new Promise((resolve) => { img.onload = resolve; });
+  const width = img.width;
+  const height = img.height;
+  const newWidth = Math.floor(width / 2);
+  const newHeight = Math.floor(height / 2);
+  if (newWidth <= 0 || newHeight <= 0) return URL.createObjectURL(blob);
+  const canvas = document.createElement('canvas');
+  canvas.width = newWidth;
+  canvas.height = newHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, newWidth, newHeight);
+  const quality = 0.5;
+  const mime = format.includes('png') ? 'image/png' : 'image/jpeg';
+  return new Promise((resolve) => {
+    canvas.toBlob((resizedBlob) => {
+      resolve(URL.createObjectURL(resizedBlob));
+    }, mime, quality);
+  });
+}
+</script>
+<script>const state = {
+  library: {},     
+  albumOrder: [],
+  currentAlbum: null,
+  currentIndex: 0,
+  queue: [],
+  repeatMode: 0,
+  shuffled: false,
+  shuffleOrder: []
+};
+
+const CORES = Math.max(2, navigator.hardwareConcurrency || 4);
+const MAX_CONCURRENT_DOWNLOADS = Math.min(4, Math.max(1, Math.floor(CORES / 2)));
+const MAX_CONCURRENT_METADATA = Math.max(2, CORES - 1);
+
+function pLimit(max) {
+  let active = 0;
+  const q = [];
+  const next = () => {
+    if (active >= max || q.length === 0) return;
+    active++;
+    const { fn, resolve, reject } = q.shift();
+    fn().then(res => { resolve(res); active--; next(); }).catch(err => { reject(err); active--; next(); });
+  };
+  return (fn) => new Promise((resolve, reject) => {
+    q.push({ fn, resolve, reject });
+    next();
+  });
+}
+
+const downloadLimit = pLimit(MAX_CONCURRENT_DOWNLOADS);
+const metaLimit = pLimit(MAX_CONCURRENT_METADATA);
+</script>
+<script>
+
+const Metadata = { loadTrackMetadata, parseVorbisComments };
+
+ async function loadTrackMetadata(track, zipUrl, index) {
+  if (track._metaLoaded) return;
+  track._metaLoaded = false;
+  const album = state.library[zipUrl];
+
+  try {
+
+    if (window.jsmediatags && track.blob) {
+      await new Promise((resolve, reject) => {
+        jsmediatags.read(track.blob, {
+          onSuccess: (tag) => {
+            try {
+              const tags = tag.tags || {};
+              track.title = tags.title || track.title || '';
+              track.artist = tags.artist || '';
+              track.album = tags.album || album.displayName;
+
+              if (tags.picture && tags.picture.data && !album.art) {
+                let bin = "";
+                for (let i = 0; i < tags.picture.data.length; i++) bin += String.fromCharCode(tags.picture.data[i]);
+                const imageUrl = `data:${tags.picture.format};base64,${btoa(bin)}`;
+                track.picture = imageUrl;
+                album.art = imageUrl;
+              }
+
+              if (track.album && !album.displayNameFromMeta) {
+                album.displayName = track.album;
+                album.displayNameFromMeta = true;
+              }
+
+              loadDuration(track).then(d => {
+                track.duration = d;
+              }).catch(()=>{});
+
+              track._metaLoaded = true;
+              resolve();
+            } catch (inner) { reject(inner); }
+          },
+          onError: (err) => { reject(err || new Error('jsmediatags unknown error')); }
+        });
+      });
+      return;
+    }
+  } catch (err) {
+
+    const isTagFormat = err && (err.type === 'tagFormat' || (err.info && /no suitable/i.test(String(err.info))));
+    if (!isTagFormat) {
+      console.warn('jsmediatags error (non-tagFormat) for', track.filename, err);
+    }
+  }
+
+  try {
+    const parsed = await parseVorbisComments(track.blob);
+    if (parsed) {
+      track.title = parsed.tags.TITLE || parsed.tags.title || track.title || '';
+      track.artist = parsed.tags.ARTIST || parsed.tags.artist || '';
+      track.album = parsed.tags.ALBUM || parsed.tags.album || album.displayName;
+
+      if (parsed.picture && !album.art) {
+        const imgBlob = new Blob([parsed.picture.data], { type: parsed.picture.mime || 'image/jpeg' });
+        const imageUrl = URL.createObjectURL(imgBlob);
+        track.picture = imageUrl;
+        album.art = imageUrl;
+      }
+
+      if (track.album && !album.displayNameFromMeta) {
+        album.displayName = track.album;
+        album.displayNameFromMeta = true;
+      }
+
+      loadDuration(track).then(d => { track.duration = d; }).catch(()=>{});
+      track._metaLoaded = true;
+      return;
+    }
+  } catch (pvErr) {
+    console.warn('Vorbis fallback parse failed for', track.filename, pvErr);
+  }
+
+  track.title = track.title || track.filename && track.filename.split('/').pop().replace(/\.[^.]+$/, '') || 'Unknown';
+  track.artist = track.artist || '';
+  track.album = track.album || album.displayName;
+  loadDuration(track).then(d => { track.duration = d; }).catch(()=>{});
+  track._metaLoaded = true;
+}
+
+ async function parseVorbisComments(blobOrBuf) {
+  let arr;
+  if (blobOrBuf instanceof Blob) {
+    const sliceSize = Math.min(blobOrBuf.size, 256 * 1024);
+    const buf = await blobOrBuf.slice(0, sliceSize).arrayBuffer();
+    arr = new Uint8Array(buf);
+  } else if (blobOrBuf instanceof Uint8Array) {
+    arr = blobOrBuf;
+  } else {
+    return null;
+  }
+
+  const needle = new Uint8Array([0x03, 0x76, 0x6f, 0x72, 0x62, 0x69, 0x73]);
+  let idx = -1;
+  for (let i = 0; i <= arr.length - needle.length; i++) {
+    let ok = true;
+    for (let j = 0; j < needle.length; j++) { if (arr[i + j] !== needle[j]) { ok = false; break; } }
+    if (ok) { idx = i + needle.length; break; }
+  }
+  if (idx === -1) return null;
+
+  let pos = idx;
+  function readUInt32LE(offset) {
+    return arr[offset] | (arr[offset + 1] << 8) | (arr[offset + 2] << 16) | (arr[offset + 3] << 24);
+  }
+
+  if (pos + 4 > arr.length) return null;
+  const vendorLen = readUInt32LE(pos); pos += 4;
+  if (pos + vendorLen > arr.length) return null;
+  pos += vendorLen;
+  if (pos + 4 > arr.length) return null;
+  const userCount = readUInt32LE(pos); pos += 4;
+  const tags = {};
+  let picture = null;
+
+  for (let i = 0; i < userCount; i++) {
+    if (pos + 4 > arr.length) break;
+    const len = readUInt32LE(pos); pos += 4;
+    if (pos + len > arr.length) break;
+    const bytes = arr.subarray(pos, pos + len);
+    pos += len;
+    const str = new TextDecoder('utf-8').decode(bytes);
+    const eq = str.indexOf('=');
+    if (eq !== -1) {
+      const key = str.slice(0, eq).toUpperCase();
+      const val = str.slice(eq + 1);
+      if (!(key in tags)) tags[key] = val;
+      if (key === 'METADATA_BLOCK_PICTURE' && val) {
+        try {
+          const picBytes = base64ToUint8Array(val.trim());
+          const picParsed = parseFlacPictureBlock(picBytes);
+          if (picParsed) picture = picParsed;
+        } catch (e) {
+          console.warn('Failed to decode METADATA_BLOCK_PICTURE', e);
+        }
+      }
+    }
+  }
+
+  const normalized = {};
+  for (const k in tags) normalized[k.toLowerCase()] = tags[k];
+  return { tags: Object.assign({}, tags, normalized), picture };
+}
+</script>
+<script>
+
+ async function fetchAndUnzip(zipUrl) {
+  return downloadLimit(async () => {
+    const resp = await fetch(zipUrl, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${zipUrl}`);
+    const buf = await resp.arrayBuffer();
+    return await new Promise((resolve, reject) => {
+      try {
+        fflate.unzip(new Uint8Array(buf), { worker: true }, (err, files) => {
+          if (err) return reject(err);
+          resolve(files);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
+ async function prefetchAllAlbums(renderAlbumList, updateAlbumThumb, coverEl, searchQuery = '') {
+  const zipUrls = state.albumOrder.slice();
+  const tasks = zipUrls.map(async (zipUrl) => {
+    const album = state.library[zipUrl];
+    if (!album) return;
+    try {
+      const files = await fetchAndUnzip(zipUrl);
+      album.tracks = Object.entries(files)
+        .filter(([name]) => /\.(mp3|m4a|ogg|flac)$/i.test(name))
+        .map(([filename, data]) => {
+          const ext = filename.match(/\.(mp3|m4a|ogg|flac)$/i)?.[1]?.toLowerCase();
+          const type = ext === 'mp3' ? 'audio/mpeg' :
+                       ext === 'm4a' ? 'audio/mp4' :
+                       ext === 'ogg' ? 'audio/ogg' :
+                       ext === 'flac' ? 'audio/flac' : 'application/octet-stream';
+          const blob = new Blob([data], { type });
+          return {
+            filename,
+            blob,
+            blobUrl: null,
+            title: titleFromFilename(filename),
+            artist: null,
+            album: null,
+            duration: null,
+            picture: null,
+            _metaLoaded: false
+          };
+        });
+
+      album._loaded = true;
+      album.artIndex = Number.POSITIVE_INFINITY;
+      renderAlbumList(searchQuery);
+
+      let fallbackImageBlob = null;
+      const imageEntries = Object.keys(files).filter(n => /\.(jpe?g|png|webp|gif)$/i.test(n));
+      if (imageEntries.length > 0) {
+        const imgName = imageEntries[0];
+        const data = files[imgName];
+        const ext = imgName.split('.').pop().toLowerCase();
+        const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'gif' ? 'image/gif' : 'image/jpeg';
+        fallbackImageBlob = new Blob([data], { type: mime });
+      }
+
+      const metaPromises = [];
+      for (let i = 0; i < album.tracks.length; i++) {
+        const track = album.tracks[i];
+        const p = metaLimit(async () => {
+          await Promise.resolve(); 
+          try {
+            await loadTrackMetadata(track, zipUrl, i);
+          } catch (e) {
+            console.warn('track metadata parse error', track.filename, e);
+          }
+          const pic = track.picture;
+          if (pic) {
+            if (i < (album.artIndex || Number.POSITIVE_INFINITY)) {
+              album.art = pic;
+              album.artIndex = i;
+              updateAlbumThumb(zipUrl, pic);
+              if (coverEl && state.currentAlbum === zipUrl) {
+                coverEl.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = (typeof pic === 'string') ? pic : URL.createObjectURL(new Blob([pic.data || pic], { type: pic.mime || 'image/jpeg' }));
+                coverEl.appendChild(img);
+              }
+            }
+          }
+        });
+        metaPromises.push(p);
+      }
+
+      Promise.allSettled(metaPromises).then(() => {
+        if (!album.art && fallbackImageBlob) {
+          const imgUrl = URL.createObjectURL(fallbackImageBlob);
+          album.art = imgUrl;
+          album.artIndex = 9999;
+          updateAlbumThumb(zipUrl, imgUrl);
+          if (coverEl && state.currentAlbum === zipUrl) {
+            coverEl.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            coverEl.appendChild(img);
+          }
+        }
+      }).catch(() => {});
+    } catch (err) {
+      console.warn('Failed to prefetch/unzip', zipUrl, err);
+      album._loaded = true;
+    }
+  });
+
+  await Promise.allSettled(tasks);
+  renderAlbumList(searchQuery);
+}
+
+ function buildLibraryFromManifest(man) {
+  state.library = {};
+  state.albumOrder = [];
+  const zips = man.zips || [];
+  for (const zipUrl of zips) {
+    if (!zipUrl.toLowerCase().endsWith('.zip')) continue;
+    const albumName = zipUrlToAlbumName(zipUrl);
+    state.library[zipUrl] = { tracks: [], art: null, _loaded: false, displayName: albumName, zipUrl, zipData: null, displayNameFromMeta: false };
+    state.albumOrder.push(zipUrl);
+  }
+}
+
+ function zipUrlToAlbumName(zipUrl) {
+  const parts = zipUrl.split('/');
+  const filename = decodeURIComponent(parts[parts.length - 1]);
+  return filename.replace(/\.zip$/i, '').replace(/[-_]/g, ' ');
+}
+
+ async function loadManifest(renderAlbumList, prefetchAll) {
+  try {
+    const manifest = window.MANIFEST;
+    if (!manifest || !Array.isArray(manifest.zips)) throw new Error('Invalid manifest');
+    buildLibraryFromManifest(manifest);
+    renderAlbumList();
+    prefetchAll().catch(err => console.warn('prefetchAllAlbums error', err));
+  } catch (err) {
+    const albumsEl = document.getElementById('albums');
+    albumsEl.innerHTML = `<div class="muted">Failed to load manifest — check the MANIFEST script in HTML</div>`;
+    console.error(err);
+  }
+}</script>
+<script>
+
+function renderAlbumList(filter = '') {
+  const { albumsEl } = getDom();
+  albumsEl.innerHTML = '';
+  const q = filter.trim().toLowerCase();
+  for (const zipUrl of state.albumOrder) {
+    const album = state.library[zipUrl];
+    const disp = album.displayName;
+    if (q && disp.toLowerCase().indexOf(q) === -1) {
+      const hasHit = (album.tracks || []).some(t => (t.filename || '').toLowerCase().includes(q));
+      if (!hasHit) continue;
+    }
+    const a = document.createElement('div');
+    a.className = 'album';
+    a.setAttribute('role', 'listitem');
+    a.dataset.zip = zipUrl;
+    a.onclick = () => openAlbum(zipUrl);
+    const img = document.createElement('img');
+    img.alt = disp;
+    img.src = album.art || placeholder(disp);
+    img.loading = 'lazy';
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `<div style="font-weight:700">${disp}</div><div class="muted">${(album.tracks && album.tracks.length) || 'Loading'} tracks</div>`;
+    a.appendChild(img); a.appendChild(meta);
+    albumsEl.appendChild(a);
+  }
+}
+
+function hookPlayers(hPlay, hEnqueue) {
+  play = hPlay;
+  enqueue = hEnqueue;
+}
+
+var UI = {
+  hookPlayers: function(play, enqueue) { hookPlayers(play, enqueue); },
+  renderAlbumList: function(q) { renderAlbumList(q); },
+  renderTracklist: function(zipUrl) { renderTracklist(zipUrl); },
+  updateAlbumThumb: function(zipUrl, pic) { updateAlbumThumb(zipUrl, pic); }
+};
+
+function renderTracklist(zipUrl) {
+  const { tracklistEl } = getDom();
+  const album = state.library[zipUrl];
+  tracklistEl.innerHTML = '';
+  (album.tracks || []).forEach((t, idx) => {
+    const tr = document.createElement('div');
+    tr.className = 'track';
+    tr.dataset.idx = idx;
+    tr.onclick = (e) => {
+      if (e.shiftKey) { enqueue(zipUrl, idx); return; }
+      play(zipUrl, idx);
+    };
+    const idxEl = document.createElement('div'); idxEl.textContent = String(idx + 1).padStart(2, ' ');
+    const meta = document.createElement('div');
+    meta.innerHTML = `<div class="title">${t.title || titleFromFilename(t.filename)}</div><div class="title-sub">${t.artist || ''}</div>`;
+    const dur = document.createElement('div'); dur.className = 'small-muted'; dur.textContent = t.duration ? fmt(t.duration) : '';
+    tr.appendChild(idxEl); tr.appendChild(meta); tr.appendChild(dur);
+    const enqueueBtn = document.createElement('button'); enqueueBtn.className = 'btn'; enqueueBtn.textContent = '⋯'; enqueueBtn.title = 'Track actions';
+    enqueueBtn.onclick = (ev) => { ev.stopPropagation(); showTrackActions(zipUrl, idx, tr); };
+    tr.appendChild(enqueueBtn);
+    tracklistEl.appendChild(tr);
+  });
+}
+
+function updateTrackRow(index, track) {
+  const { tracklistEl } = getDom();
+  const row = tracklistEl.querySelector(`.track[data-idx='${index}']`);
+  if (!row) return;
+  row.querySelector('.title').textContent = track.title || titleFromFilename(track.filename);
+  row.querySelector('.title-sub').textContent = track.artist || '';
+  const durEl = row.querySelector('.small-muted');
+  durEl && (durEl.textContent = track.duration ? fmt(track.duration) : '');
+}
+
+function updateAlbumThumb(zipUrl, artUrl) {
+  const { albumsEl } = getDom();
+  const items = Array.from(albumsEl.querySelectorAll('.album'));
+  items.forEach(item => {
+    if (item.dataset.zip === zipUrl) {
+      const img = item.querySelector('img');
+      if (img) img.src = artUrl;
+    }
+  });
+}
+
+function updateAlbumName(zipUrl, name) {
+  const { albumsEl } = getDom();
+  const item = albumsEl.querySelector(`.album[data-zip="${zipUrl}"]`);
+  if (item) {
+    item.querySelector('.meta > div:first-child').textContent = name;
+  }
+}
+
+function renderQueue() {
+  const { queueEl, queueCountEl } = getDom();
+  queueEl.innerHTML = '';
+  queueCountEl.textContent = String(state.queue.length);
+  state.queue.forEach((q, i) => {
+    const album = state.library[q.album];
+    const t = (album && album.tracks && album.tracks[q.index]) || { filename: 'Unknown' };
+    const item = document.createElement('div'); item.className = 'qitem';
+    const img = document.createElement('img'); img.src = album.art || t.picture || placeholder(album.displayName);
+    const meta = document.createElement('div'); meta.innerHTML = `<div style="font-weight:700">${t.title || titleFromFilename(t.filename)}</div><div class="small-muted">${t.artist || ''} • ${album.displayName}</div>`;
+    const rem = document.createElement('button'); rem.className = 'btn'; rem.textContent = '✕'; rem.onclick = () => { state.queue.splice(i, 1); renderQueue(); };
+    item.appendChild(img); item.appendChild(meta); item.appendChild(rem);
+    queueEl.appendChild(item);
+  });
+}
+
+function showTrackActions(zipUrl, idx, el) {
+  const existing = document.getElementById('track-actions');
+  if (existing) existing.remove();
+  const popup = document.createElement('div');
+  popup.id = 'track-actions';
+  popup.style.position = 'absolute';
+  popup.style.background = 'var(--panel)';
+  popup.style.color = 'inherit';
+  popup.style.borderRadius = '8px';
+  popup.style.padding = '8px';
+  popup.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
+  popup.style.zIndex = 9999;
+  popup.innerHTML = `<div style="cursor:pointer;padding:6px" id="act-play">Play now</div><div style="cursor:pointer;padding:6px" id="act-enqueue">Enqueue</div><div style="cursor:pointer;padding:6px" id="act-next">Play next</div>`;
+  document.body.appendChild(popup);
+  const rect = el.getBoundingClientRect();
+  popup.style.left = (rect.right + 6) + 'px';
+  popup.style.top = (rect.top) + 'px';
+  const remove = () => popup.remove();
+  popup.querySelector('#act-play').onclick = () => { remove(); play(zipUrl, idx); };
+  popup.querySelector('#act-enqueue').onclick = () => { remove(); enqueue(zipUrl, idx); };
+  popup.querySelector('#act-next').onclick = () => { remove(); state.queue.splice(1, 0, { album: zipUrl, index: idx }); renderQueue(); };
+  setTimeout(() => window.addEventListener('click', remove, { once: true }), 20);
+}
+
+function hookPlayers(hPlay, hEnqueue) { play = hPlay; enqueue = hEnqueue; }
+
+function highlightActive() {
+  const { tracklistEl } = getDom();
+  const children = Array.from(tracklistEl.querySelectorAll('.track'));
+  children.forEach((el, i) => el.classList.toggle('active', i === state.currentIndex));
+}
+</script>
+<script>
+const DB_NAME = 'JuicyCache';
+const DB_VERSION = 1;
+let db;
+
+const DB = {
+  async getAlbumData(zipUrl) {
+    const dbAlbum = await loadAlbumFromDb(zipUrl, null); 
+    return dbAlbum ? dbAlbum : null;
+  },
+  async saveAlbumData(zipUrl, size, albumData) {
+    await saveAlbumToDb(zipUrl, size, albumData);
+  }
+};
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    if (db) return resolve(db);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('albums')) {
+        const store = d.createObjectStore('albums', { keyPath: 'url' });
+        store.createIndex('size', 'size', { unique: false });
+      }
+      if (!d.objectStoreNames.contains('state')) {
+        d.createObjectStore('state', { keyPath: 'key' });
+      }
+    };
+    request.onsuccess = e => { db = e.target.result; resolve(db); };
+    request.onerror = e => reject(e.target.error);
+  });
+}
+
+function saveAlbumToDb(zipUrl, size, albumData) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction('albums', 'readwrite');
+    tx.objectStore('albums').put({ url: zipUrl, size, albumData });
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  }));
+}
+
+function loadAlbumFromDb(zipUrl, size) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction('albums', 'readonly');
+    const req = tx.objectStore('albums').get(zipUrl);
+    req.onsuccess = e => {
+      const result = e.target.result;
+      if (result && result.size === size) resolve(result.albumData);
+      else resolve(null);
+    };
+    req.onerror = e => reject(e.target.error);
+  }));
+}
+
+function saveStateToDb(key, value) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction('state', 'readwrite');
+    tx.objectStore('state').put({ key, value });
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  }));
+}
+
+function loadStateFromDb(key) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction('state', 'readonly');
+    const req = tx.objectStore('state').get(key);
+    req.onsuccess = e => resolve(e.target.result?.value ?? null);
+    req.onerror = e => reject(e.target.error);
+  }));
+}
+
+function ensureBlobUrl(track) {
+  if (!track) return null;
+  if (typeof track.blobUrl === 'string' && track.blobUrl && track.blobUrl !== 'null') return track.blobUrl;
+  if (track.blob instanceof Blob) {
+    try {
+      const url = URL.createObjectURL(track.blob);
+      track.blobUrl = url;
+      return url;
+    } catch (e) {
+      console.warn('ensureBlobUrl failed for', track.filename, e);
+      track.blobUrl = null;
+      return null;
+    }
+  }
+  return null;
+}
+
+async function resizeImageWorker(blob, scale = 0.5) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(URL.createObjectURL(new Blob([`
+      self.onmessage = async e => {
+        const { blob, scale } = e.data;
+        const bitmap = await createImageBitmap(blob);
+        const canvas = new OffscreenCanvas(bitmap.width*scale, bitmap.height*scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const resizedBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.8 });
+        self.postMessage(resizedBlob);
+      };
+    `], { type: 'text/javascript' })));
+    worker.onmessage = e => resolve(e.data);
+    worker.onerror = reject;
+    worker.postMessage({ blob, scale });
+  });
+}
+
+function extractZipFflate(zipBlob) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(URL.createObjectURL(new Blob([`
+      importScripts('./js/fflate.js');
+
+      self.onmessage = async e => {
+        try {
+          const blob = e.data.zipBlob;
+          const reader = new FileReader();
+          reader.onload = () => {
+            const data = new Uint8Array(reader.result);
+            const tracks = [];
+            let art = null;
+            fflate.unzip(data, {
+              filter: () => true,
+              consume: (name, fileData) => {
+                const b = new Blob([fileData]);
+                if (/cover|art/i.test(name)) art = b;
+                else tracks.push({ filename: name, blob: b });
+              }
+            });
+            self.postMessage({ tracks, art });
+          };
+          reader.onerror = e => self.postMessage({ error: e.message });
+          reader.readAsArrayBuffer(blob);
+        } catch(err) { self.postMessage({ error: err.message }); }
+      };
+    `], { type: 'text/javascript' })));
+    worker.onmessage = e => {
+      if (e.data.error) reject(e.data.error);
+      else resolve(e.data);
+    };
+    worker.onerror = reject;
+    worker.postMessage({ zipBlob });
+  });
+}
+
+async function fetchAlbum(zipUrl) {
+  if (state.library[zipUrl]) return state.library[zipUrl];
+
+  const response = await fetch(zipUrl);
+  const blob = await response.blob();
+  const sizeKb = Math.round(blob.size / 1024);
+
+  const cached = await loadAlbumFromDb(zipUrl, sizeKb);
+  if (cached) {
+    cached.tracks.forEach(t => ensureBlobUrl(t));
+    state.library[zipUrl] = cached;
+    return cached;
+  }
+
+  const albumData = await extractZipFflate(blob);
+
+  if (albumData.art instanceof Blob) {
+    try {
+      const resized = await resizeImageWorker(albumData.art, 0.5);
+      albumData.art = URL.createObjectURL(resized);
+    } catch(e){ console.warn(e); }
+  }
+
+  if (albumData.tracks.length > 0) ensureBlobUrl(albumData.tracks[0]);
+
+  state.library[zipUrl] = albumData;
+  await saveAlbumToDb(zipUrl, sizeKb, albumData);
+  return albumData;
+}
+
+async function preloadAlbums(zipUrls) {
+  const promises = zipUrls.map(url => fetchAlbum(url));
+  await Promise.allSettled(promises);
+}
+
+async function playCached(zipUrl, idx) {
+  const album = state.library[zipUrl] || await fetchAlbum(zipUrl);
+  if (!album) return;
+
+  state.currentAlbum = zipUrl;
+  state.currentIndex = idx;
+
+  const t = album.tracks[idx];
+  ensureBlobUrl(t);
+
+  const { audio, coverEl, nowTitle, nowSub, durationEl } = getDom();
+  audio.src = t.blobUrl || t.blob;
+  audio.currentTime = 0;
+  audio.load();
+  try { await audio.play(); } catch(e){}
+
+  nowTitle.textContent = t.title || t.filename.split('/').pop().replace(/\.[^.]+$/, '');
+  nowSub.textContent = `${t.artist || ''} • ${album.displayName}`;
+  const art = album.art || t.picture;
+  coverEl.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = art || placeholder(album.displayName);
+  coverEl.appendChild(img);
+
+  highlightActive();
+  if (t.duration) durationEl.textContent = fmt(t.duration);
+  else loadTrackMetadata(t, zipUrl, idx).then(d => {
+    durationEl.textContent = fmt(d);
+    updateTrackRow(idx, t);
+  }).catch(() => {});
+
+  const nextIndex = (idx + 1) % album.tracks.length;
+  if (album.tracks[nextIndex]) ensureBlobUrl(album.tracks[nextIndex]);
+}
+
+async function play(zipUrl, idx) {
+  playCached(zipUrl, idx);
+}
+
+function enqueue(zipUrl, index) {
+  state.queue.push({ album: zipUrl, index });
+  renderQueue();
+}
+
+function makeShuffle(n) {
+  state.shuffleOrder = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [state.shuffleOrder[i], state.shuffleOrder[j]] = [state.shuffleOrder[j], state.shuffleOrder[i]];
+  }
+}
+
+function autoSavePlayerState() {
+  const { audio } = getDom();
+  saveStateToDb('player', {
+    currentAlbum: state.currentAlbum,
+    currentIndex: state.currentIndex,
+    volume: audio.volume,
+    queue: state.queue,
+    repeatMode: state.repeatMode,
+    shuffled: state.shuffled,
+    currentTime: audio.currentTime,
+  }).catch(console.warn);
+}
+setInterval(autoSavePlayerState, 5000);
+
+async function restorePlayerState() {
+  const saved = await loadStateFromDb('player');
+  if (!saved) return;
+
+  state.currentAlbum = saved.currentAlbum;
+  state.currentIndex = saved.currentIndex;
+  state.queue = saved.queue || [];
+  state.repeatMode = saved.repeatMode || 0;
+  state.shuffled = saved.shuffled || false;
+
+  const { audio, volume } = getDom();
+  audio.volume = saved.volume ?? 1;
+
+  if (saved.currentAlbum != null && saved.currentIndex != null) {
+    const album = state.library[saved.currentAlbum] || await fetchAlbum(saved.currentAlbum);
+    const track = album.tracks[saved.currentIndex];
+    ensureBlobUrl(track);
+    audio.src = track.blobUrl;
+    audio.currentTime = saved.currentTime || 0;
+  }
+}
+
+function setupAudioHandlers() {
+  const { audio, playBtn, prevBtn, nextBtn, seek, currentTimeEl, durationEl, volume, shuffleBtn, repeatBtn, btnRefresh, searchInput, clearQueueBtn } = getDom();
+
+  audio.addEventListener('play', () => playBtn.textContent = 'Pause');
+  audio.addEventListener('pause', () => playBtn.textContent = 'Play');
+  audio.addEventListener('timeupdate', () => {
+    currentTimeEl.textContent = fmt(audio.currentTime);
+    if (audio.duration) durationEl.textContent = fmt(audio.duration);
+    if (audio.duration) seek.value = (audio.currentTime / audio.duration) * 100;
+  });
+  audio.addEventListener('ended', () => {
+    if (state.repeatMode === 1) { audio.currentTime = 0; audio.play(); return; }
+    if (state.queue.length > 0) {
+      const next = state.queue.shift();
+      renderQueue();
+      playCached(next.album, next.index);
+      return;
+    }
+    const album = state.library[state.currentAlbum];
+    if (!album) return;
+    let nextIndex = state.currentIndex + 1;
+    if (state.shuffled) {
+      if (state.shuffleOrder.length === 0) makeShuffle(album.tracks.length);
+      nextIndex = state.shuffleOrder.shift();
+    }
+    if (nextIndex >= album.tracks.length) {
+      if (state.repeatMode === 2) nextIndex = 0; else { audio.pause(); return; }
+    }
+    playCached(state.currentAlbum, nextIndex);
+  });
+
+  playBtn.onclick = () => { if (audio.paused) audio.play(); else audio.pause(); };
+  prevBtn.onclick = () => {
+    if (audio.currentTime > 3) { audio.currentTime = 0; }
+    else {
+      const album = state.library[state.currentAlbum];
+      if (!album) return;
+      state.currentIndex = (state.currentIndex - 1 + album.tracks.length) % album.tracks.length;
+      playCached(state.currentAlbum, state.currentIndex);
+    }
+  };
+  nextBtn.onclick = () => {
+    if (state.queue.length > 0) {
+      const next = state.queue.shift();
+      renderQueue();
+      playCached(next.album, next.index);
+      return;
+    }
+    const album = state.library[state.currentAlbum];
+    if (!album) return;
+    if (state.shuffled) {
+      if (state.shuffleOrder.length === 0) makeShuffle(album.tracks.length);
+      const nextIndex = state.shuffleOrder.shift();
+      playCached(state.currentAlbum, nextIndex);
+    } else {
+      let ni = state.currentIndex + 1;
+      if (ni >= album.tracks.length) {
+        if (state.repeatMode === 2) ni = 0; else { audio.pause(); return; }
+      }
+      playCached(state.currentAlbum, ni);
+    }
+  };
+
+  seek.addEventListener('input', () => { if (audio.duration) audio.currentTime = (seek.value / 100) * audio.duration; });
+  volume.addEventListener('input', () => audio.volume = Number(volume.value));
+
+  shuffleBtn.onclick = () => {
+    state.shuffled = !state.shuffled;
+    shuffleBtn.style.opacity = state.shuffled ? '1' : '0.6';
+    if (state.shuffled) makeShuffle((state.library[state.currentAlbum]?.tracks || []).length);
+  };
+
+  repeatBtn.onclick = () => {
+    state.repeatMode = (state.repeatMode + 1) % 3;
+    repeatBtn.textContent = state.repeatMode === 0 ? 'Repeat [Off]' : state.repeatMode === 1 ? 'Repeat [This Song]' : 'Repeat [This Album]';
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); if (audio.paused) audio.play(); else audio.pause(); }
+    if (e.code === 'ArrowRight') { e.preventDefault(); nextBtn.click(); }
+    if (e.code === 'ArrowLeft') { e.preventDefault(); prevBtn.click(); }
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (window._renderAlbumList) window._renderAlbumList(val);
+  });
+
+  btnRefresh.onclick = () => { if (window._loadManifest) window._loadManifest(); };
+  clearQueueBtn.onclick = () => { state.queue = []; renderQueue(); };
+}
+</script>
+<script>let DOM = null;
+
+function initDom() {
+  DOM = {
+    audio: document.getElementById('audio'),
+    albumsEl: document.getElementById('albums'),
+    tracklistEl: document.getElementById('tracklist'),
+    coverEl: document.getElementById('cover'),
+    nowTitle: document.getElementById('now-title'),
+    nowSub: document.getElementById('now-sub'),
+    playBtn: document.getElementById('play'),
+    prevBtn: document.getElementById('prev'),
+    nextBtn: document.getElementById('next'),
+    seek: document.getElementById('seek'),
+    currentTimeEl: document.getElementById('current'),
+    durationEl: document.getElementById('duration'),
+    volume: document.getElementById('volume'),
+    searchInput: document.getElementById('search'),
+    btnRefresh: document.getElementById('btn-refresh'),
+    shuffleBtn: document.getElementById('shuffle'),
+    repeatBtn: document.getElementById('repeat'),
+    queueEl: document.getElementById('queue'),
+    queueCountEl: document.getElementById('queue-count'),
+    clearQueueBtn: document.getElementById('clear-queue')
+  };
+  return DOM;
+}
+
+function getDom() {
+  return DOM;
+}
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initDom();
+  const DOM = getDom();
+
+  UI.hookPlayers(play, enqueue);
+
+  window._renderAlbumList = (q = '') => UI.renderAlbumList(q);
+
+  window._loadManifest = () => loadManifest(
+    () => UI.renderAlbumList(),
+    () => prefetchAllAlbums(
+      () => UI.renderAlbumList(DOM.searchInput.value || ''),
+      (zipUrl, pic) => UI.updateAlbumThumb(zipUrl, pic),
+      DOM.coverEl,
+      DOM.searchInput.value || ''
+    )
+  );
+
+  window.openAlbum = async (zipUrl) => {
+    const album = state.library[zipUrl];
+    const disp = album.displayName;
+    DOM.coverEl.innerHTML = '';
+    const coverImg = document.createElement('img');
+    coverImg.src = album.art || Utils.placeholder(disp);
+    DOM.coverEl.appendChild(coverImg);
+    DOM.nowTitle.textContent = disp;
+    DOM.nowSub.textContent = `${album.tracks.length || 'Loading'} tracks`;
+    UI.renderTracklist(zipUrl);
+
+    if (album._loaded) return;
+    album._loaded = true;
+
+    try {
+      const resp = await fetch(zipUrl, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const buf = await resp.arrayBuffer();
+      fflate.unzip(new Uint8Array(buf), { worker: true }, async (err, files) => {
+        if (err) {
+          console.error('fflate unzip error', err);
+          DOM.albumsEl.innerHTML = `<div class="muted">Failed to unpack ZIP for ${disp}</div>`;
+          return;
+        }
+        album.tracks = Object.entries(files)
+          .filter(([name]) => /\.(mp3|m4a|ogg|flac)$/i.test(name))
+          .map(([filename, data]) => {
+            const ext = filename.match(/\.(mp3|m4a|ogg|flac)$/i)?.[1]?.toLowerCase();
+            const type = ext === 'mp3' ? 'audio/mpeg' :
+                         ext === 'm4a' ? 'audio/mp4' :
+                         ext === 'ogg' ? 'audio/ogg' :
+                         ext === 'flac' ? 'audio/flac' : 'application/octet-stream';
+            const blob = new Blob([data], { type });
+            const blobUrl = URL.createObjectURL(blob);
+            return {
+              filename,
+              blob,
+              blobUrl,
+              title: Utils.titleFromFilename(filename),
+              artist: null,
+              album: null,
+              duration: null,
+              picture: null,
+              _metaLoaded: false
+            };
+          });
+
+        UI.renderTracklist(zipUrl);
+        DOM.nowSub.textContent = `${album.tracks.length} tracks`;
+
+        let foundArt = false;
+        for (let i = 0; i < album.tracks.length; i++) {
+          const t = album.tracks[i];
+          try {
+            await Metadata.loadTrackMetadata(t, zipUrl, i).catch(() => {});
+          } catch (e) {
+            console.warn('Error awaiting metadata for', t.filename, e);
+          }
+          const art = album.art || t.picture;
+          if (art) {
+            album.art = art;
+            UI.updateAlbumThumb(zipUrl, art);
+            DOM.coverEl.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = art;
+            DOM.coverEl.appendChild(img);
+            foundArt = true;
+            break;
+          }
+        }
+
+        if (!foundArt) {
+          const imageEntries = Object.keys(files).filter(n => /\.(jpe?g|png|webp|gif)$/i.test(n));
+          if (imageEntries.length > 0) {
+            const imageName = imageEntries[0];
+            const data = files[imageName];
+            const ext = imageName.split('.').pop().toLowerCase();
+            const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'gif' ? 'image/gif' : 'image/jpeg';
+            const imgBlob = new Blob([data], { type: mime });
+            const imgUrl = URL.createObjectURL(imgBlob);
+            album.art = imgUrl;
+            UI.updateAlbumThumb(zipUrl, imgUrl);
+            if (state.currentAlbum === zipUrl) {
+              DOM.coverEl.innerHTML = '';
+              const img = document.createElement('img');
+              img.src = imgUrl;
+              DOM.coverEl.appendChild(img);
+            }
+            foundArt = true;
+          }
+        }
+
+        for (let i = 0; i < album.tracks.length; i++) {
+          const t = album.tracks[i];
+          if (!t._metaLoaded) {
+            Metadata.loadTrackMetadata(t, zipUrl, i).catch(() => {});
+          }
+        }
+      });
+    } catch (err) {
+      console.error(`Failed to load ZIP for ${zipUrl}`, err);
+      DOM.albumsEl.innerHTML = `<div class="muted">Failed to load ZIP for ${disp}</div>`;
+    }
+  };
+
+  UI.hookPlayers(window.openAlbum ? play : play, enqueue);
+
+  setupAudioHandlers();
+  window._loadManifest();
+});
+</script>
+</body>
+</html>

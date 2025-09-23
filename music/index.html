@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Juicy - Media Player</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+ <link rel="stylesheet" href="./css/home.css">
+</head>
+<body>
+<div class="app">
+  <!-- left sidebar -->
+  <div class="sidebar card">
+    <div class="brand">
+      <div class="logo">J!</div>
+      <div>
+        <div style="font-weight:700">Juicy</div>
+        <div class="muted" style="font-size:12px">Juicy Client • Web Build</div>
+      </div>
+    </div>
+
+    <div class="search">
+      <input id="search" placeholder="Search albums or tracks..." />
+      <button class="btn" id="btn-refresh" title="Reload manifest">⟳</button>
+    </div>
+
+    <div class="muted" style="margin-top:6px">Albums</div>
+    <div class="albums card" id="albums" role="list"></div>
+  </div>
+
+  <!-- main -->
+  <div class="main card">
+    <div class="now">
+      <div class="cover" id="cover"><div class="muted">No album</div></div>
+      <div class="now-info">
+        <div id="now-title" class="now-title">Nothing playing</div>
+        <div id="now-sub" class="now-sub">—</div>
+        <div style="margin-top:12px" class="controls">
+          <button class="btn" id="prev">⟸</button>
+          <button class="btn primary bigplay" id="play">Play</button>
+          <button class="btn" id="next">⟹</button>
+
+          <div style="flex:1;display:flex;align-items:center;gap:8px;margin-left:8px">
+            <button id="shuffle" class="btn">Shuffle</button>
+            <button id="repeat" class="btn">Repeat</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:6px">
+            <input id="volume" type="range" min="0" max="1" step="0.01" value="1" style="width:110px">
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="time" id="current">0:00</div>
+          <input type="range" id="seek" min="0" max="100" value="0">
+          <div class="time" id="duration">0:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="muted" style="margin-top:6px">Tracklist</div>
+    <div class="tracklist" id="tracklist" role="list">
+      <div class="muted">Open an album to view tracks.</div>
+    </div>
+  </div>
+
+  <!-- queue -->
+  <div class="queue card">
+    <div class="header">
+      <div style="font-weight:700">Queue</div>
+      <div class="small-muted" id="queue-count">0</div>
+    </div>
+    <div class="queue-list" id="queue"></div>
+    <div style="display:flex;gap:8px;justify-content:space-between">
+      <button class="btn" id="clear-queue">Clear</button>
+      <button class="btn" id="save-playlist">Save</button>
+    </div>
+  </div>
+</div>
+
+<audio id="audio" preload="metadata"></audio>
+
+<script id="manifest" src="./json/manifest.json"></script>
+<script src="js/fflate.js"></script>
+<script src="js/metadatafinderdontremovethisisimportant.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/state.js"></script>
+<script src="js/metadata.js"></script>
+<script src="js/zip.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/player.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

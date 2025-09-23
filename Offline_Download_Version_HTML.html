@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My Drive - Google Drive</title>
+<link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #1a1a2e;
+  background-image:
+    radial-gradient(circle at 15% 50%, #4a148c21, transparent 40%),
+    radial-gradient(circle at 85% 50%, #1e1e3f21, transparent 40%);
+  color: #e0e0e0;
+  text-align: center;
+  margin: 0;
+  padding: 40px 20px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  animation: fadeInBody 1s ease-out;
+}
+@keyframes fadeInBody { from { opacity:0 } to { opacity:1 } }
+#eagler-stars-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; will-change: transform; }
+h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: #9c27b0; text-shadow: 0 0 8px rgba(156,39,176,0.5); animation: fadeInDown 1s ease-out; }
+h2 { font-size: 1.1rem; margin-bottom: 14px; letter-spacing: 1px; color: #7b8bad; font-weight: 300; animation: fadeInDown 1s ease-out 0.2s; animation-fill-mode: backwards; }
+@keyframes fadeInDown { from { opacity:0; transform:translateY(-20px) } to { opacity:1; transform:translateY(0) } }
+.eagler-category { margin: 10px auto; padding: 15px 25px; cursor: pointer; font-size: 1.1rem; font-weight: 400; display:flex; justify-content:space-between; align-items:center; border:1px solid #333; background: rgba(40,30,60,0.3); border-radius:8px; transition: background .3s, border-color .3s, opacity .6s, transform .6s; width:90%; max-width:600px; opacity:0; transform:translateY(20px); will-change: opacity, transform; }
+.eagler-category.eagler-visible { opacity:1; transform:translateY(0) }
+.eagler-category:hover { background: rgba(69,50,100,0.5); border-color:#9c27b0 }
+.eagler-arrow { transition: transform .4s cubic-bezier(0.165,0.84,0.44,1) }
+.eagler-links { display:flex; flex-direction:column; gap:8px; margin:-10px auto 20px; width:90%; max-width:600px; border:1px solid #333; border-top:none; padding:0px 20px; background:#1e1e3f; border-bottom-left-radius:8px; border-bottom-right-radius:8px; max-height:0; overflow:hidden; transition: max-height .4s cubic-bezier(0.165,0.84,0.44,1), padding .4s; }
+.eagler-links a { text-decoration:none; color:#b39ddb; background-color:#2a2a4a; padding:12px 20px; border-radius:6px; transition: all .3s ease, opacity .6s, transform .6s; text-align:left; font-weight:300; opacity:0; transform:translateY(20px); will-change: opacity, transform; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.eagler-links.open { padding:20px; }
+.eagler-links a.eagler-visible { opacity:1; transform:translateY(0) }
+.eagler-links a:hover { background-color:#9c27b0; color:#fff; transform:translateX(5px); box-shadow:0 0 15px rgba(156,39,176,0.6) }
+@media (max-width:768px) { body { padding:20px 10px } h1 { font-size:2rem } .eagler-category { font-size:1rem; padding:12px 20px; width:95% } .eagler-links { width:95% } }
+#eagler-overlay { position:fixed; inset:0; background: rgba(26,26,46,0.95); backdrop-filter: blur(5px); color:#e0e0e0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; z-index:10000; }
+#eagler-overlay .title { font-size:1.8rem; font-weight:600; color:#9c27b0; margin-bottom:20px }
+#eagler-status { margin-top:1em; opacity:.8; font-size:1rem; font-weight:300 }
+.eagler-error-panel { display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%; height:100vh; padding:20px; box-sizing:border-box; background-color:#1a1a2e }
+.eagler-error-icon { font-size:1.5rem; margin-bottom:20px; color:#7b8bad }
+.eagler-error-title { font-size:2.5rem; color:#ff5252 }
+.eagler-error-message { margin-top:20px; max-width:600px; color:#b0b0b0; line-height:1.8; font-weight:300 }
+#eagler-flap { position:fixed; inset:0; display:flex; flex-direction:column; z-index:9999; background: rgba(26,26,46,0.95); backdrop-filter: blur(6px); animation:fadeInBody .6s; font-family:'Poppins',sans-serif; color:#e0e0e0 }
+.flap-header { flex:0 0 70px; display:flex; align-items:center; justify-content:space-between; padding:0 25px; background: radial-gradient(circle at 15% 50%, #4a148c21, transparent 40%), radial-gradient(circle at 85% 50%, #1e1e3f21, transparent 40%), #1a1a2e; border-bottom:1px solid #333; box-shadow:0 2px 12px rgba(0,0,0,0.4); }
+.flap-header span { font-size:1.4rem; font-weight:600; letter-spacing:2px; color:#9c27b0; text-shadow:0 0 6px rgba(156,39,176,0.5) }
+.flap-header button { background:#2a2a4a; color:#b39ddb; border:1px solid #333; padding:10px 18px; margin-left:12px; border-radius:8px; cursor:pointer; font-size:.95rem; font-weight:400; transition:all .3s; }
+.flap-header button:hover { background:#9c27b0; color:#fff; border-color:#9c27b0; box-shadow:0 0 15px rgba(156,39,176,0.6); transform:translateY(-2px) }
+#eagler-iframe { flex:1; width:100%; border:none; animation:fadeInUp .8s }
+.settings-btn { position: fixed; left: 18px; bottom: 18px; z-index: 10001; width: 52px; height: 52px; border-radius: 10px; background: linear-gradient(180deg, rgba(58,33,100,0.9), rgba(34,24,60,0.9)); border: 1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.5); transition: transform .15s ease, box-shadow .15s; }
+.settings-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+.settings-btn svg { width: 22px; height: 22px; fill: #d0b3ff; }
+#eagler-settings-overlay { position: fixed; inset: 0; background: rgba(10,10,20,0.6); display: none; align-items: center; justify-content: center; z-index: 10002; padding: 20px; }
+#eagler-settings-panel { width: 460px; max-width: calc(100vw - 40px); background: linear-gradient(180deg, rgba(28,20,50,0.98), rgba(18,16,36,0.96)); border-radius: 12px; padding: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); border: 1px solid rgba(156,39,176,0.08); color: #e7e0ff; font-family: 'Poppins', sans-serif; }
+#eagler-settings-panel h3 { margin: 0 0 12px; color: #9c27b0; font-size: 1.1rem; letter-spacing: 1px; }
+.setting-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-bottom: 1px dashed rgba(255,255,255,0.03); }
+.setting-row:last-child { border-bottom: none; }
+.setting-row label { font-weight: 500; font-size: 0.95rem; color: #cfc6ff; }
+.setting-control { display:flex; align-items:center; gap:8px; }
+input[type="number"], input[type="text"], select { background: rgba(30,30,50,0.7); border: 1px solid rgba(255,255,255,0.06); color: #e7e0ff; padding: 8px 10px; border-radius: 8px; font-size: 0.95rem; min-width: 80px; }
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: #9c27b0; }
+.settings-footer { display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
+.settings-footer button { padding:8px 12px; border-radius:8px; border: none; cursor:pointer; font-weight:600; }
+.btn-cancel { background: transparent; color:#cfc6ff; border:1px solid rgba(255,255,255,0.04); }
+.btn-save { background:#9c27b0; color:#fff; box-shadow: 0 8px 20px rgba(156,39,176,0.16); }
+#tabs-wrap { width: 100%; max-width: 960px; margin: 6px auto 12px; display:flex; flex-direction:column; gap:8px; align-items:center; }
+.tab-buttons { display:flex; gap:8px; align-items:center; }
+.tab-btn { padding:8px 14px; border-radius:10px; background: rgba(40,30,60,0.45); border:1px solid rgba(156,39,176,0.06); cursor:pointer; font-weight:600; color:#e7e0ff; }
+.tab-btn.active { background: linear-gradient(180deg,#6b2fa715,#461a3a15); box-shadow:0 6px 20px rgba(0,0,0,0.3); color:#ffd; }
+.tab-content { width: 92%; max-width: 880px; background: #141224; border-radius:10px; padding: 10px; box-sizing: border-box; overflow: hidden; max-height: 0; transition: max-height .36s ease, padding .36s ease; border:1px solid rgba(255,255,255,0.03); }
+.tab-content.open { padding: 12px; max-height: 200px; }
+.tab-grid { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start; align-items:center; }
+.favorite-pill { background: rgba(40,30,60,0.5); color:#d7c8ff; padding:8px 12px; border-radius:999px; border:1px solid rgba(156,39,176,0.06); cursor:pointer; display:flex; gap:8px; align-items:center; font-weight:500; }
+.recent-pill { background: rgba(30,30,40,0.45); padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); cursor:pointer; color:#bcd0ff; font-size:0.95rem; }
+.fav-toggle { width:26px; height:26px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.fav-toggle svg { width:16px; height:16px; fill: #a9a0d8; transition: transform .12s; }
+.fav-toggle.active svg { fill: #ffd166; transform: scale(1.05); }
+#search-wrap { width: 100%; max-width: 720px; margin: 8px auto 6px; padding: 0 6px; display:flex; align-items:center; gap:8px; justify-content:center; }
+#search-input { width: 100%; max-width: 600px; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background: rgba(30,30,50,0.7); color:#fff; font-size:1rem; }
+#perf-panel { position: fixed; right: 14px; top: 14px; z-index: 10003; background: rgba(20,18,34,0.85); border: 1px solid rgba(156,39,176,0.08); padding: 10px 12px; border-radius: 10px; min-width: 110px; font-family: 'Poppins', sans-serif; color:#dfe2ff; box-shadow: 0 8px 30px rgba(0,0,0,0.5); display:none; }
+#perf-panel h4 { margin:0 0 8px; font-size:0.9rem; color:#9c27b0; font-weight:600; }
+.perf-row { font-size:0.95rem; line-height:1.3; margin:3px 0; color:#cfd6ff; }
+.perf-value { float:right; font-weight:700; color:#fff; }
+</style>
+</head>
+<body>
+<canvas id="eagler-stars-canvas"></canvas>
+<div id="eagler-container">
+  <h1 class="top-title">EaglerHost</h1>
+  <h2>eagler, eagler, eagler!</h2>
+  <div id="search-wrap">
+    <input id="search-input" placeholder="Search games, categories, titles..." aria-label="Search games">
+  </div>
+
+  <div class="eagler-category" onclick="eaglerToggle('favs')">
+    <span>Favorites</span><span id="favs-arrow" class="eagler-arrow">▼</span>
+  </div>
+  <div id="favs" class="eagler-links closed"></div>
+  <div class="eagler-category" onclick="eaglerToggle('recent')">
+    <span>Recently Played</span><span id="recent-arrow" class="eagler-arrow">▼</span>
+  </div>
+  <div id="recent" class="eagler-links closed"></div>
+  <div class="eagler-category" onclick="eaglerToggle('quickplay')">
+    <span>important stuff you should look at</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="quickplay" class="eagler-links closed">
+    <a onclick="loadIframeLink('https://docs.google.com/forms/d/e/1FAIpQLSelnfKwU_BMf93wCLAxt52V0JR9nhtfIovp9tPnsfjjJ9UDaA/viewform?embedded=true')">Request a Game To Be Added Here!!!</a>
+    <a onclick="launch('music/index.html', this)">Juicy! Media Player</a>
+    <a onclick="launch('games/HTML/ai.html', this)">Tuff AI</a>
+  </div>
+  <div class="eagler-category" onclick="eaglerToggle('emulation')">
+    <span>emulation & retro</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="emulation" class="eagler-links closed">
+    <a onclick="launch('games/emu/animal_crossing.html', this)">Animal Crossing (n64)</a>
+    <a onclick="launch('games/emu/m64.html', this)">Super Mario 64 (n64)</a>
+	<a onclick="launch('games/emu/ocarina.html', this)">Legend Of Zelda: Ocarina Of Time (n64)</a>
+	<a onclick="launch('games/emu/majora.html', this)">Legend Of Zelda: Majora's Mask (n64)</a>
+	<a onclick="launch('games/emu/kart.html', this)">Mario Kart 64 (n64)</a>
+	<a onclick="launch('games/emu/smash.html', this)">Super Smash Bros. (n64)</a>
+	<a onclick="launch('games/emu/rainbow.html', this)">Tom Clancy's Rainbow Six (n64)</a>
+	<a onclick="launch('games/emu/007.html', this)">Golden Eye 007 (n64)</a>
+	<a onclick="launch('games/emu/banjo.html', this)">Banjo-Kazooie (n64)</a>
+	<a onclick="launch('games/emu/konkeydong.html', this)">Donkey Kong 64 (n64)</a>
+	<a onclick="launch('games/emu/tetris.html', this)">Tetris (NES)</a>
+    <a onclick="launch('games/emu/mario.html', this)">Super Mario Bros. (NES)</a>
+    <a onclick="launch('games/emu/famidash.html', this)">Geometry Dash (NES)</a>
+    <a onclick="launch('games/emu/poke_red.html', this)">Pokemon Red (GB)</a>
+    <a onclick="launch('games/emu/poke_emerald.html', this)">Pokemon Emerald (GBA)</a>
+  </div>
+  <div class="eagler-category" onclick="eaglerToggle('mc-tools')">
+    <span>minecraft & tools</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="mc-tools" class="eagler-links closed">
+    <a onclick="launch('games/HTML/112.html', this)">Minecraft 1.12.2</a>
+    <a onclick="launch('games/HTML/18.html', this)">Minecraft 1.8.8</a>
+    <a onclick="launch('games/HTML/164.html', this)">Minecraft 1.6.4</a>
+    <a onclick="launch('games/HTML/EaglercraftY_1.5.2.html', this)">Minecraft/EaglercraftY 1.5.2</a>
+    <a onclick="launch('games/HTML/alpha.html', this)">Hypercraft 1.5.2</a>
+    <a onclick="launch('games/HTML/servers.html', this)">Server List</a>
+    <a onclick="launch('games/HTML/tpacks.html', this)">Texture Packs</a>
+  </div>
+  <div class="eagler-category" onclick="eaglerToggle('ports')">
+    <span>ports & fan games</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="ports" class="eagler-links closed">
+    <a onclick="loadIframeLink('https://streamamethyst.org')">amethyst</a>
+	<a onclick="launch('games/clash/index.html', this)">Class Royale (offbrand)</a>
+	<a onclick="launch('games/ragdoll-archers/index.html', this)">Ragdoll Archers</a>
+	<a onclick="launch('games/bitlife/index.html', this)">Bitlife</a>
+	<a onclick="launch('games/nzp/index.html', this)">COD Zombies (offbrand) AKA NZP</a>
+    <a onclick="launch('games/pizza-tower/index.html', this)">Pizza Tower</a>
+    <a onclick="launch('games/class-of-09/index.html', this)">Class Of 09</a>
+    <a onclick="launch('games/CrazyCattle3D/index.html', this)">CrazyCattle3D</a>
+    <a onclick="launch('games/undertale/index.html', this)">Undertale</a>
+	<a onclick="launch('games/deltarune/index.html', this)">Deltarune</a>
+	<a onclick="launch('games/cuphead/index.html', this)">Cuphead</a>
+    <a onclick="launch('games/baldo/index.html', this)">Raldi's Crack House</a>
+    <a onclick="launch('games/reworks/index.html', this)">Reworks</a>
+    <a onclick="launch('games/hollowknight/index.html', this)">Hollow Knight</a>
+	<a onclick="launch('games/bad-parenting/index.html', this)">Bad Parenting: Mr. Red Face</a>
+    <a onclick="launch('games/buckshot-roulette/index.html', this)">Buckshot Roulette</a>
+	<a onclick="launch('games/portal2/index.html', this)">Thinking With PORTALS (Portal 1)</a>
+	<a onclick="launch('games/1v1lol/index.html', this)">1v1.LOL</a>
+    <a onclick="launch('games/ultrakill/index.html', this)">Ultrakill</a>
+  </div>
+  <div class="eagler-category" onclick="eaglerToggle('casual')">
+    <span>arcade & casual</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="casual" class="eagler-links closed">
+    <a onclick="launch('games/slope/index.html', this)">Slope</a>
+    <a onclick="launch('games/Bloons/index.html', this)">Bloons 5</a>
+    <a onclick="launch('games/PVZ/index.html', this)">Plants VS Zombies</a>
+    <a onclick="launch('games/HTML/Dino.html', this)">Chrome Dino</a>
+    <a onclick="launch('games/fnf/index.html', this)">Friday Night Funkin'</a>
+    <a onclick="launch('games/cookieclicker/index.html', this)">Cookie Clicker</a>
+    <a onclick="launch('games/monkeymart/index.html', this)">Monkey Mart</a>
+    <a onclick="launch('games/basketballstars/index.html', this)">Basketball Stars</a>
+    <a onclick="launch('games/subway/index.html', this)">Subway Surfers</a>
+    <a onclick="launch('games/people-playground/index.html', this)">People Playground</a>
+	<a onclick="launch('games/temple-run-2/index.html', this)">Temple Run 2</a>
+	<a onclick="launch('games/stickman-hook/index.html', this)">Stickman Hook</a>
+	<a onclick="launch('games/jetpack-joyride/index.html', this)">Jetpack Joyride</a>
+	<a onclick="launch('games/retrobowl/index.html', this)">Retro Bowl</a>
+	<a onclick="launch('games/OvO/index.html', this)">OvO</a>
+    <a onclick="launch('games/raft/index.html', this)">Raft</a>
+	<a onclick="launch('games/scratch/index.html', this)">Scratch VM (60 fps scratch)</a>
+    <a onclick="launch('games/HTML/wave.html', this)">Wave 3.0</a>
+	<a onclick="launch('games/HTML/geometrywave.html', this)">Geometry Wave</a>
+	<a onclick="launch('games/gdlite/index.html', this)">Geometry Dash</a>
+	<a onclick="launch('games/soccerrandom/index.html', this)">Soccer Random</a>
+  </div>
+  <div class="eagler-category" onclick="eaglerToggle('horror')">
+    <span>horror & survival</span><span class="eagler-arrow">▼</span>
+  </div>
+  <div id="horror" class="eagler-links closed">
+    <a onclick="launch('games/BATIM/index.html', this)">Bendy And The Ink Machine</a>
+    <a onclick="launch('games/FNAD/index.html', this)">FNAD</a>
+    <a onclick="launch('games/HTML/FNAW.html', this)">FNAW</a>
+	<a onclick="launch('games/FNAF/1/index.html', this)">FNAF 1</a>
+	<a onclick="launch('games/FNAF/2/index.html', this)">FNAF 2</a>
+	<a onclick="launch('games/FNAF/3/index.html', this)">FNAF 3</a>
+	<a onclick="launch('games/FNAF/4/index.html', this)">FNAF 4</a>
+	<a onclick="launch('games/FNAF/sl/index.html', this)">FNAF Sister Location</a>
+    <a onclick="launch('games/repo/index.html', this)">R.E.P.O.</a>
+    <a onclick="launch('games/granny/index.html', this)">Granny</a>
+  </div>
+</div>
+<button class="settings-btn" id="eagler-settings-open" title="Settings" aria-label="Settings">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm8.94-3.5a7.95 7.95 0 0 0-.14-1.2l2-1.55-2-3.46-2.35.95a8.06 8.06 0 0 0-1.66-.96L15.5 2h-3l-.29 2.28c-.56.23-1.08.55-1.57.93L7.3 4.26 4.95 7.72l2 1.55c-.05.39-.08.78-.08 1.18s.03.79.08 1.18l-2 1.55L7.3 19.74l2.35-.95c.49.38 1.01.7 1.57.93L12.5 22h3l.29-2.28c.56-.23 1.08-.55 1.66-.96l2.35.95 2-3.46-2-1.55c.09-.41.14-.83.14-1.27z"/></svg>
+</button>
+<div id="eagler-settings-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div id="eagler-settings-panel">
+    <h3>Settings</h3>
+    <div class="setting-row">
+      <label for="setting-auto-fullscreen">Auto Fullscreen</label>
+      <div class="setting-control">
+        <input id="setting-auto-fullscreen" type="checkbox">
+      </div>
+    </div>
+    <div class="setting-row">
+      <label for="setting-verify-count">Verify Count (Reccomended: 3)</label>
+      <div class="setting-control">
+        <input id="setting-verify-count" type="number" min="1" step="1" value="3" title="Number of verify attempts per mirror">
+      </div>
+    </div>
+    <div class="setting-row">
+      <label for="setting-star-density">Star Density (UI)</label>
+      <div class="setting-control">
+        <select id="setting-star-density">
+          <option value="0.5">Low</option>
+          <option value="1" selected>Normal</option>
+          <option value="1.5">High</option>
+          <option value="2">Very High</option>
+        </select>
+      </div>
+    </div>
+    <div class="setting-row">
+      <label for="setting-show-stars">Show Stars</label>
+      <div class="setting-control">
+        <input id="setting-show-stars" type="checkbox" checked>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <label for="setting-preferred-mirror">Preferred Mirror</label>
+      <div class="setting-control">
+        <select id="setting-preferred-mirror" title="Which mirror should be tried first"></select>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <label for="setting-perf-enable">Performance Stats</label>
+      <div class="setting-control">
+        <input id="setting-perf-enable" type="checkbox">
+      </div>
+    </div>
+    <div id="perf-options" style="display:none; padding:8px 0 0 0;">
+      <div class="setting-row" style="border:none; padding:6px 0;">
+        <label for="perf-fps">Show FPS</label>
+        <div class="setting-control"><input id="perf-fps" type="checkbox"></div>
+      </div>
+      <div class="setting-row" style="border:none; padding:6px 0;">
+        <label for="perf-memory">Show Memory</label>
+        <div class="setting-control"><input id="perf-memory" type="checkbox"></div>
+      </div>
+      <div class="setting-row" style="border:none; padding:6px 0;">
+        <label for="perf-device-memory">Show Device Memory</label>
+        <div class="setting-control"><input id="perf-device-memory" type="checkbox"></div>
+      </div>
+      <div class="setting-row" style="border:none; padding:6px 0;">
+        <label for="perf-loadtime">Show Last Load Time</label>
+        <div class="setting-control"><input id="perf-loadtime" type="checkbox"></div>
+      </div>
+    </div>
+	<div class="setting-row">
+  <label for="setting-safe-mode">Safe Mode</label>
+  <div class="setting-control">
+    <input id="setting-safe-mode" type="checkbox" checked>
+  </div>
+    </div>
+    <div class="settings-footer">
+      <button class="btn-cancel" id="btn-settings-cancel">Cancel</button>
+      <button class="btn-save" id="btn-settings-save">Save</button>
+    </div>
+  </div>
+</div>
+<div id="perf-panel" aria-hidden="true">
+  <h4>Perf</h4>
+  <div id="perf-fps-row" class="perf-row" style="display:none;">FPS <span id="perf-fps" class="perf-value">0</span></div>
+  <div id="perf-memory-row" class="perf-row" style="display:none;">Memory <span id="perf-memory" class="perf-value">—</span></div>
+  <div id="perf-device-row" class="perf-row" style="display:none;">Device <span id="perf-device" class="perf-value">—</span></div>
+  <div id="perf-load-row" class="perf-row" style="display:none;">Last Load <span id="perf-load" class="perf-value">—</span></div>
+</div>
+
+
+<script>
+(function(){
+  try{
+    if (window.top !== window.self) {
+      const btn = document.getElementById('eagler-settings-open');
+      if (btn) {
+        btn.style.display = 'none';
+        btn.setAttribute('aria-hidden', 'true');
+      }
+      const overlay = document.getElementById('eagler-settings-overlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      try {
+        const s = document.createElement('style');
+        s.textContent = '.settings-btn, #eagler-settings-overlay { display: none !important; visibility: hidden !important; }';
+        (document.head || document.documentElement).appendChild(s);
+      } catch(e){}
+    }
+  } catch(e){}
+})();
+</script>
+<script>
+const localEaglerVersion = "1.3.0";
+
+const MIRR = [{
+    host: 'eagl3rhost.com',
+    name: 'Main Server'
+}, {
+    host: 'eaglerhost.web.app',
+    name: 'Main Server 2'
+}, {
+    host: 'eaglerhost.firebaseapp.com',
+    name: 'Backup Server'
+}, {
+    host: 'eagl3rhost2.com',
+    name: 'Backup Server 2'
+}, {
+    host: 'eagler.3b3t.win',
+    name: 'Backup Server 3'
+}, {
+    host: 'damnitithink.ishotupa.school',
+    name: 'Backup Server 4'
+}, {
+    host: 'eaglerhost.ishotupa.school',
+    name: 'Backup Server 5'
+}, {
+    host: 'goddamn.ishotupa.school',
+    name: 'Backup Server 6'
+}, {
+    host: 'ithink.ishotupa.school',
+    name: 'Backup Server 7'
+}, {
+    host: 'api.astraa.dev',
+    name: 'Astraas API'
+}, {
+    host: 'dns.astraa.dev',
+    name: 'EaglerDNS'
+}, {
+    host: 'eagl3rhost-is-better-than-p1zza-ed1tion.uk',
+    name: 'EaglerHost > Pizza Edition (server)'
+}];
+const SKEY = 'eagler_settings_v3';
+const V = localEaglerVersion;
+const defS = {
+    autoFullscreen: false,
+    verifyCount: 3,
+    starDensity: 1,
+    showStars: true,
+    perf: {
+        enabled: false,
+        fps: true,
+        memory: false,
+        deviceMemory: false,
+        loadTime: false
+    },
+    favorites: [],
+    recent: [],
+    preferredMirror: '',
+	safeMode: true
+};
+let s = (() => {
+    try {
+        const r = localStorage.getItem(SKEY);
+        return r ? Object.assign(JSON.parse(JSON.stringify(defS)), JSON.parse(r)) : JSON.parse(JSON.stringify(defS))
+    } catch (e) {
+        console.warn('sload', e);
+        return JSON.parse(JSON.stringify(defS))
+    }
+})();
+let cm = 0,
+    cp = '',
+    cdn = '';
+const EXPECT = "d1f31db063ff53e470a8df9aa420432b37d71a91fb53e5e594f1cbcbcee1576c";
+async function hb(b) {
+    const h = await crypto.subtle.digest('SHA-256', b);
+    return Array.from(new Uint8Array(h)).map(x => x.toString(16).padStart(2, '0')).join('')
+}
+window.addEventListener('beforeunload', e => {
+    e.preventDefault();
+    e.returnValue = '';
+}, {
+    passive: false
+});
+let ov = null;
+function showLoad() {
+    perfT.vS = performance.now();
+    if (ov) return;
+    ov = document.createElement('div');
+    ov.id = 'eagler-overlay';
+    const t = document.createElement('div');
+    t.className = 'title';
+    t.textContent = 'checking sites';
+    const sN = document.createElement('div');
+    sN.id = 'eagler-status';
+    ov.appendChild(t);
+    ov.appendChild(sN);
+    document.body.appendChild(ov)
+}
+function updStatus(t) {
+    const e = document.getElementById('eagler-status');
+    if (e) e.textContent = t
+}
+function hideLoad() {
+    if (!ov) return;
+    ov.remove();
+    ov = null;
+    perfT.vE = performance.now();
+    perfT.lastV = perfT.vE - (perfT.vS || perfT.vE)
+}
+function setupIF(a) {
+    if (!a) return;
+    try {
+        a.setAttribute('tabindex', '0');
+        a.setAttribute('allow', ['fullscreen', 'autoplay', 'gamepad', 'microphone', 'camera', 'picture-in-picture', 'clipboard-write', 'encrypted-media'].join('; '));
+        a.setAttribute('allowfullscreen', '');
+        a.style.outline = 'none'
+    } catch (e) {
+        console.warn('si', e)
+    }
+}
+function focusIF() {
+    try {
+        if (!rI) return;
+        rI.setAttribute('tabindex', '0');
+        rI.style.outline = 'none';
+        rI.focus && rI.focus();
+        if (rI.contentWindow && typeof rI.contentWindow.focus === 'function') rI.contentWindow.focus()
+    } catch (e) {
+        console.warn('fi', e)
+    }
+}
+(function fixFocus() {
+    document.addEventListener('pointerdown', () => focusIF(), {
+        capture: true
+    });
+    window.addEventListener('focus', () => setTimeout(focusIF, 10));
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') setTimeout(focusIF, 10)
+    });
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'msfullscreenchange'].forEach(ev => document.addEventListener(ev, () => setTimeout(focusIF, 50)));
+})();
+async function checkVer(h) {
+    try {
+        const r = await fetch(`https://${h}/version.json`);
+        if (!r.ok) throw new Error('no');
+        return await r.json()
+    } catch (e) {
+        console.warn('cv', h, e);
+        return null
+    }
+}
+async function tryMirror() {
+    if (cm >= MIRR.length) {
+        hideLoad();
+        return showErr()
+    }
+    const m = MIRR[cm];
+    updStatus(`Verifying: ${m.name} (${m.host}) …`);
+    let at = 0;
+    const maxA = () => Math.max(1, Math.floor(Number(s.verifyCount) || 3));
+    async function v() {
+        at++;
+        try {
+            const res = await fetch(`https://${m.host}/verify.mp4`);
+            if (!res.ok) throw new Error('bad');
+            const ct = (res.headers.get('content-type') || '');
+            if (!ct.startsWith('video/mp4')) throw new Error('ct');
+            const buf = await res.arrayBuffer();
+            const h = await hb(buf);
+            if (h !== EXPECT) throw new Error('hash');
+            updStatus(`Verified ${m.name} (${at}/${maxA()})`);
+            if (at < maxA()) {
+                setTimeout(v, 800);
+                return
+            }
+            const ver = await checkVer(m.host);
+            if (!ver) throw new Error('vnull');
+            if (ver.version !== V) {
+                hideLoad();
+                showUpdate(ver, m)
+            } else {
+                updStatus(`Version up-to-date! Loading ${m.name}...`);
+                loadIframe(m.host)
+            }
+        } catch (e) {
+            updStatus(`Verification failed on ${m.name} (attempt ${at})`);
+            if (at < maxA()) {
+                setTimeout(v, 800)
+            } else {
+                cm++;
+                tryMirror()
+            }
+        }
+    }
+    v();
+}
+function showUpdate(ver, m) {
+    const hostDisplay = m ? `${m.name} (${m.host})` : 'unknown';
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(26,26,46,0.95)',
+        color: '#e0e0e0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Poppins, sans-serif',
+        padding: '20px',
+        zIndex: '10000',
+        overflowY: 'auto'
+    });
+    overlay.innerHTML = `
+        <div style="
+            background:#2b2b45;
+            border-radius:16px;
+            padding:30px;
+            max-width:800px;
+            width:90%;
+            box-shadow:0 8px 24px rgba(0,0,0,0.4);
+            text-align:center;
+        ">
+            <h2 style="color:#ff5252;margin-bottom:20px;">
+                You must update to a newer version of EaglerHost before playing!
+            </h2>
+            <p style="margin-bottom:10px;">
+                The version you're using is [<strong>${V}</strong>], newest is [<strong>${ver.version}</strong>].
+            </p>
+            <div style="margin-bottom:20px;text-align:left;max-width:600px;margin-left:auto;margin-right:auto;">
+                <strong>Changes in ${ver.version}:</strong>
+                <ul style="list-style-position: inside;padding:0;margin-top:8px;">
+                    ${Array.isArray(ver.changelogs) ? ver.changelogs.map(i => `<li>${i}</li>`).join('') : '<li>No changelog provided.</li>'}
+                </ul>
+            </div>
+            <p>Mirror: ${hostDisplay}</p>
+            <button id="eagler-update-btn" style="
+                padding:12px 24px;
+                margin-top:20px;
+                background:#ff5252;
+                border:none;
+                border-radius:8px;
+                color:white;
+                font-weight:bold;
+                cursor:pointer;
+                transition:0.2s;
+            ">Update Client</button>
+            <div id="eagler-update-tip" style="
+                display:none;
+                margin-top:20px;
+                color:#9cd1ff;
+                font-weight:bold;
+                font-size:16px;
+                line-height:1.6;
+                text-align:left;
+                max-width:500px;
+                margin-left:auto;
+                margin-right:auto;
+            ">
+                <p>After clicking the button, the updated client will download.</p>
+                <ol style="padding-left:20px;">
+                    <li>Move your mouse to the <strong>bottom right corner</strong> of your Chromebook screen.</li>
+                    <li>You should see the downloaded file appear in the download bar.</li>
+                    <li><strong>Double click the file</strong> there once it finishes downloading.</li>
+                    <li>If you don’t see it, open the <strong>Files app</strong> (blue folder icon) and check your <strong>Downloads</strong> folder.</li>
+                </ol>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    const btn = overlay.querySelector('#eagler-update-btn');
+    const tip = overlay.querySelector('#eagler-update-tip');
+    btn.addEventListener('click', () => {
+        const l = ver && ver.upd_link;
+        if (l) window.open(l, '_blank', 'noopener,noreferrer');
+        else alert('Update link not provided (upd_link missing).');
+        tip.style.display = 'block';
+        const animation = tip.animate(
+            [
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.05)' },
+                { transform: 'scale(1)' }
+            ],
+            {
+                duration: 1000,
+                iterations: Infinity
+            }
+        );
+        setTimeout(() => animation.cancel(), 8000);
+    });
+}
+function showErr() {
+    document.body.innerHTML = `<div class="eagler-error-panel"><div class="eagler-error-icon">eagler, eagler, eaglerrrrr...</div><h2 class="eagler-error-title">ALL mirrors are blocked!</h1><p class="eagler-error-message">Each mirror page of EaglerHost has either been blocked, or a critical issue has occured.<br><br>Try again later, and this might be fixed.</p></div>`
+}
+let rI = null;
+const perfT = {
+    vS: 0,
+    vE: 0,
+    lastV: 0,
+    iframeS: 0,
+    lastL: 0
+};
+function loadIframe(host) {
+    document.getElementById('eagler-iframe')?.remove();
+    document.getElementById('eagler-flap')?.remove();
+    const flap = document.createElement('div');
+    flap.id = 'eagler-flap';
+    Object.assign(flap.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100vh',
+        zIndex: 9999,
+        display: 'flex',
+        flexDirection: 'column'
+    });
+    const header = document.createElement('div');
+    header.className = 'flap-header';
+    Object.assign(header.style, {
+        flex: '0 0 100px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 20px'
+    });
+    const title = document.createElement('span');
+    title.textContent = cdn;
+    const btns = document.createElement('div');
+    const fsb = document.createElement('button');
+    fsb.textContent = 'Fullscreen';
+    fsb.onclick = () => {
+        try {
+            if (rI.requestFullscreen) rI.requestFullscreen();
+            else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen()
+        } catch (e) {
+            console.warn('fs', e)
+        }
+    };
+    const cb = document.createElement('button');
+    cb.textContent = 'Close';
+    cb.onclick = () => flap.remove();
+    btns.appendChild(fsb);
+    btns.appendChild(cb);
+    header.appendChild(title);
+    header.appendChild(btns);
+    rI = document.createElement('iframe');
+    rI.id = 'eagler-iframe';
+    rI.src = `https://${host}/${cp}`;
+    Object.assign(rI.style, {
+        flex: '1',
+        width: '100%',
+        border: 'none',
+        height: 'calc(100vh - 100px)'
+    });
+    setupIF(rI);
+    flap.appendChild(header);
+    flap.appendChild(rI);
+    document.body.appendChild(flap);
+    let done = false;
+    perfT.iframeS = performance.now();
+    rI.onload = () => {
+        if (done) return;
+        done = true;
+        hideLoad();
+        document.getElementById('eagler-container').style.display = 'block';
+        perfT.lastL = performance.now() - (perfT.iframeS || performance.now());
+        addRecent(cp, cdn);
+        try {
+            focusIF()
+        } catch (e) {}
+        if (s.autoFullscreen) {
+            try {
+                if (rI.requestFullscreen) rI.requestFullscreen();
+                else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen()
+            } catch (e) {
+                console.warn('fs fail', e)
+            }
+        }
+        if (s.perf && s.perf.loadTime) document.getElementById('perf-load').textContent = Math.round(perfT.lastL) + ' ms';
+        injectHint(rI);
+        let checks = 0;
+        const maxChecks = 10;
+        const expected = (() => {
+            try {
+                return new URL(`https://${host}/${cp}`, location.href).href
+            } catch (e) {
+                return `https://${host}/${cp}`
+            }
+        })();
+        const checkInterval = setInterval(() => {
+            checks++;
+            let mismatch = false;
+            try {
+                const cur = rI.contentWindow.location.href;
+                if (!cur || !cur.startsWith(expected)) mismatch = true;
+            } catch (err) {
+                try {
+                    const src = rI.getAttribute('src') || rI.src;
+                    if (src && src !== expected) mismatch = true;
+                } catch (e) {}
+            }
+            if (mismatch) {
+                clearInterval(checkInterval);
+                updStatus(`Iframe navigated away from expected URL; trying next mirror`);
+                try {
+                    rI.remove();
+                    document.getElementById('eagler-flap')?.remove();
+                } catch (e) {}
+                cm++;
+                tryMirror();
+            } else if (checks >= maxChecks) {
+                clearInterval(checkInterval);
+            }
+        }, 1000);
+    };
+    rI.onerror = () => {
+        if (done) return;
+        done = true;
+        updStatus(`Loading on ${host} failed!`);
+        cm++;
+        tryMirror()
+    };
+}
+function injectHint(ifr) {
+    try {
+        const doc = ifr.contentDocument || ifr.contentWindow.document;
+        if (doc && doc.body) {
+            const existing = doc.getElementById('eagler-iframe-hint');
+            if (existing) return;
+            const ovf = doc.createElement('div');
+            ovf.id = 'eagler-iframe-hint';
+            Object.assign(ovf.style, {
+                position: 'fixed',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(0,0,0,0.55)',
+                color: '#fff',
+                fontFamily: 'Poppins, sans-serif',
+                fontSize: '18px',
+                textAlign: 'center',
+                zIndex: 999999,
+                cursor: 'pointer'
+            });
+            ovf.innerHTML = '<div style="max-width:720px;padding:20px;border-radius:10px;background:rgba(30,30,50,0.9);box-shadow:0 8px 30px rgba(0,0,0,0.6)">Click anywhere in the game screen to continue<br><small style="opacity:.85">This enables keyboard/gamepad input</small></div>';
+            ovf.addEventListener('pointerdown', () => {
+                try {
+                    ovf.remove();
+                    ifr.contentWindow.focus();
+                    const ev = new Event('click');
+                    ifr.contentWindow.document.dispatchEvent(ev)
+                } catch (e) {}
+            });
+            doc.body.appendChild(ovf);
+        }
+    } catch (e) {
+        showFrameFallback();
+    }
+}
+function showFrameFallback() {
+    if (document.getElementById('eagler-flap-fallback')) return;
+    const f = document.createElement('div');
+    f.id = 'eagler-flap-fallback';
+    Object.assign(f.style, {
+        position: 'fixed',
+        right: 14,
+        top: 80,
+        zIndex: 10004,
+        background: 'rgba(20,18,34,0.9)',
+        color: '#fff',
+        padding: '10px 12px',
+        borderRadius: 10,
+        border: '1px solid rgba(156,39,176,0.08)',
+        maxWidth: '280px',
+        fontFamily: 'Poppins, sans-serif',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.5)'
+    });
+    f.innerHTML = '<strong>click game to enable input</strong><div style="font-size:12px;opacity:.85;margin-top:6px">This iframe is cross-origin so the hint must remain outside. Click the game area once to focus it.</div>';
+    document.body.appendChild(f);
+    setTimeout(() => {
+        f.remove()
+    }, 8000)
+}
+document.addEventListener('click', e => {
+    const el = e.target;
+    const a = el.closest('a');
+    if (a) {
+        const oc = a.getAttribute('onclick') || '';
+        if (oc.includes('launch')) {
+            e.preventDefault();
+            const m = oc.match(/launch\(['"](.+?)['"],?\s*this\)?\)/);
+            if (m) {
+                launch(m[1], a);
+                return
+            }
+            const m2 = oc.match(/launch\(['"](.+?)['"]\)/);
+            if (m2) {
+                launch(m2[1], a);
+                return
+            }
+        }
+    }
+    if (el.classList && el.classList.contains('fav-toggle')) {
+        const p = el.dataset.path,
+            t = el.dataset.title || el.dataset.path;
+        toggleFav(p, t, el);
+        e.stopPropagation()
+    }
+});
+function launch(p, el) {
+    cp = p;
+    cm = 0;
+    cdn = (el && el.textContent) ? el.textContent : p;
+    showLoad();
+    reorder();
+    tryMirror()
+}
+
+
+
+
+function loadIframeLink(l) {
+    // remove existing iframe if present
+    document.getElementById('eagler-iframe')?.remove();
+
+    const i = document.createElement('iframe');
+    i.id = 'eagler-iframe';
+    i.src = l;
+
+    // Allow fullscreen, screen share (display-capture), and pointer lock
+    i.allow = "fullscreen; autoplay; camera; microphone; geolocation; midi; encrypted-media; " +
+              "clipboard-read; clipboard-write; display-capture; pointer-lock; payment; xr-spatial-tracking";
+    i.allowFullscreen = true;
+
+    // Sandbox — include allow-pointer-lock
+    i.sandbox = "allow-scripts allow-forms allow-same-origin allow-modals allow-popups " +
+                "allow-popups-to-escape-sandbox allow-presentation allow-downloads allow-pointer-lock";
+
+    Object.assign(i.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
+        border: 'none',
+        zIndex: 9999
+    });
+
+    setupIF(i);
+    rI = i;
+    document.body.appendChild(i);
+    document.getElementById('eagler-container').style.display = 'none';
+
+    i.addEventListener('load', () => {
+        try {
+            focusIF();
+        } catch (e) {}
+    });
+
+    i.addEventListener('error', () => {
+        document.getElementById('eagler-container').style.display = 'block';
+        alert('Failed to load iframe content — the target may block embedding.');
+    });
+
+    // === Add pointer lock handling here ===
+    document.addEventListener('click', () => {
+        // must be called on a user gesture
+        if (document.pointerLockElement !== i) {
+            i.requestPointerLock?.();
+        }
+    });
+
+    document.addEventListener('pointerlockchange', () => {
+        console.log('Pointer lock element is now:', document.pointerLockElement);
+    });
+}
+
+
+
+
+function reorder() {
+    if (!s.preferredMirror) return;
+    const idx = MIRR.findIndex(m => m.host === s.preferredMirror);
+    if (idx > 0) {
+        const x = MIRR.splice(idx, 1);
+        MIRR.unshift(x[0])
+    }
+}
+function findFavIdx(p) {
+    return s.favorites.findIndex(f => f.path === p)
+}
+function isFav(p) {
+    return findFavIdx(p) !== -1
+}
+function toggleFav(p, t, el) {
+    if (!p) return;
+    const i = findFavIdx(p);
+    if (i === -1) s.favorites.unshift({
+        path: p,
+        title: t
+    });
+    else s.favorites.splice(i, 1);
+    saveS();
+    renderFavs(curQ);
+    renderRecent(curQ);
+    updFavs()
+}
+function renderFavs(q = '') {
+    const c = document.getElementById('favs');
+    c.innerHTML = '';
+    const Q = (q || '').trim().toLowerCase();
+    if (!s.favorites || s.favorites.length === 0) {
+        c.innerHTML = `<div style="color:#9aa;padding:8px;">No favorites yet. Click the star on any game to add it.</div>`;
+        return
+    }
+    s.favorites.forEach(it => {
+        const t = it.title || it.path,
+            p = it.path;
+        if (Q && !(t.toLowerCase().includes(Q) || p.toLowerCase().includes(Q))) return;
+        const a = document.createElement('a');
+        a.textContent = t.replace(/\s+/g, ' ').trim();
+        a.setAttribute('onclick', `launch('${p.replace(/'/g,"\\'")}', this)`);
+        a.dataset.path = p;
+        a.dataset.title = t;
+        c.appendChild(a);
+        a.classList.add('eagler-visible')
+    });
+    enhanceLinksWithFavs();
+    updFavs();
+    if (!c.children.length) c.innerHTML = `<div style="color:#9aa;padding:8px;">No favorites match "${q}".</div>`
+}
+function addRecent(p, t) {
+    if (!p) return;
+    s.recent = (s.recent || []).filter(r => r.path !== p);
+    s.recent.unshift({
+        path: p,
+        title: t,
+        ts: Date.now()
+    });
+    s.recent = s.recent.slice(0, 12);
+    saveS();
+    renderRecent(curQ)
+}
+function renderRecent(q = '') {
+    const c = document.getElementById('recent');
+    c.innerHTML = '';
+    const Q = (q || '').trim().toLowerCase();
+    if (!s.recent || s.recent.length === 0) {
+        c.innerHTML = `<div style="color:#9aa;padding:8px;">No recent plays yet.</div>`;
+        return
+    }
+    s.recent.forEach(it => {
+        const t = it.title || it.path,
+            p = it.path;
+        if (Q && !(t.toLowerCase().includes(Q) || p.toLowerCase().includes(Q))) return;
+        const a = document.createElement('a');
+        a.textContent = t.replace(/\s+/g, ' ').trim();
+        a.setAttribute('onclick', `launch('${p.replace(/'/g,"\\'")}', this)`);
+        a.dataset.path = p;
+        a.dataset.title = t;
+        c.appendChild(a);
+        a.classList.add('eagler-visible')
+    });
+    enhanceLinksWithFavs();
+    updFavs();
+    if (!c.children.length) c.innerHTML = `<div style="color:#9aa;padding:8px;">No recent items match "${q}".</div>`
+}
+function enhanceLinksWithFavs() {
+    const as = Array.from(document.querySelectorAll('.eagler-links a'));
+    as.forEach(a => {
+        const oc = a.getAttribute('onclick') || '';
+        let p = '';
+        const m = oc.match(/launch\(['"](.+?)['"]/);
+        if (m) p = m[1];
+        if (p) {
+            a.dataset.path = p;
+            a.dataset.title = a.textContent.trim()
+        }
+        if (a.querySelector('.fav-toggle')) return;
+        const f = document.createElement('div');
+        f.className = 'fav-toggle';
+        f.dataset.path = p;
+        f.dataset.title = a.textContent.trim();
+        f.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+        f.title = 'Add/remove favorite';
+        f.onclick = (ev) => {
+            toggleFav(p, f.dataset.title, f);
+            ev.stopPropagation()
+        };
+        a.appendChild(f)
+    })
+}
+function updFavs() {
+    document.querySelectorAll('.fav-toggle').forEach(el => {
+        if (!el.dataset.path) return;
+        el.classList.toggle('active', isFav(el.dataset.path))
+    })
+}
+let curQ = '';
+const si = document.getElementById('search-input');
+si.addEventListener('input', e => onSearch(e.target.value));
+function onSearch(q) {
+    curQ = q || '';
+    filterList(q);
+    const sng = !!(q && q.trim().length);
+    setDropdown('favs', sng);
+    setDropdown('recent', sng);
+    renderFavs(q);
+    renderRecent(q)
+}
+function filterList(q) {
+    const Q = (q || '').trim().toLowerCase();
+    const cats = Array.from(document.querySelectorAll('.eagler-category'));
+    cats.forEach(cat => {
+        const next = cat.nextElementSibling;
+        if (!next) return;
+        const links = Array.from(next.querySelectorAll('a'));
+        let any = false;
+        links.forEach(a => {
+            const t = (a.textContent || '').toLowerCase(),
+                p = (a.dataset.path || '').toLowerCase();
+            const show = !Q || t.includes(Q) || p.includes(Q);
+            a.style.display = show ? '' : 'none';
+            if (show) any = true
+        });
+        cat.style.display = any ? '' : 'none';
+        next.style.display = any ? '' : 'none';
+        if (!any) {
+            next.style.maxHeight = null;
+            next.style.padding = '0px 20px'
+        }
+    })
+}
+function eaglerToggle(n) {
+    const p = document.getElementById(n);
+    if (!p) return;
+    const isOpen = p.classList.contains('open');
+    if (isOpen) setDropdown(n, false);
+    else setDropdown(n, true)
+}
+function setDropdown(n, o) {
+    const p = document.getElementById(n),
+        a = document.getElementById(n + '-arrow');
+    if (!p) return;
+    if (o) {
+        p.classList.add('open');
+        p.classList.remove('closed');
+        p.setAttribute('aria-hidden', 'false');
+        if (a) a.style.transform = 'rotate(180deg)';
+        p.style.padding = '20px';
+        p.style.maxHeight = p.scrollHeight + 'px'
+    } else {
+        p.classList.remove('open');
+        p.classList.add('closed');
+        p.setAttribute('aria-hidden', 'true');
+        if (a) a.style.transform = '';
+        p.style.maxHeight = null;
+        p.style.padding = '0px 20px'
+    }
+}
+(function star() {
+    const c = document.getElementById('eagler-stars-canvas');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    let w = 0,
+        h = 0,
+        stars = [];
+    const base = 150,
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+    let count = Math.round(base * dpr * (s.starDensity || 1));
+    const mouse = {
+        x: null,
+        y: null,
+        _x: null,
+        _y: null,
+        dirty: false
+    };
+    function pm(e) {
+        mouse._x = e.clientX;
+        mouse._y = e.clientY;
+        mouse.dirty = true
+    }
+    function pl() {
+        mouse._x = null;
+        mouse._y = null;
+        mouse.dirty = true
+    }
+    function resize() {
+        const W = window.innerWidth,
+            H = window.innerHeight;
+        if (W === w && H === h) return;
+        w = c.width = W * (window.devicePixelRatio || 1);
+        h = c.height = H * (window.devicePixelRatio || 1);
+        c.style.width = W + 'px';
+        c.style.height = H + 'px';
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        stars = [];
+        for (let i = 0; i < count; i++) stars.push({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            size: Math.random() * 1.5 + 0.5,
+            speedY: Math.random() * 0.5 + 0.2,
+            speedX: 0,
+            opacity: Math.random() * 0.5 + 0.2
+        })
+    }
+    window.addEventListener('pointermove', pm, {
+        passive: true
+    });
+    window.addEventListener('mouseleave', pl, {
+        passive: true
+    });
+    window.addEventListener('resize', resize, {
+        passive: true
+    });
+    let last = performance.now();
+    function anim(now) {
+        const dt = (now - last) / 1000;
+        last = now;
+        if (!s.showStars) {
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            requestAnimationFrame(anim);
+            return
+        }
+        if (mouse.dirty) {
+            mouse.x = mouse._x;
+            mouse.y = mouse._y;
+            mouse.dirty = false
+        }
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        for (let i = 0; i < stars.length; i++) {
+            const t = stars[i];
+            if (mouse.x != null && mouse.y != null) {
+                const dx = mouse.x - t.x,
+                    dy = mouse.y - t.y,
+                    dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+                if (dist < 200) t.speedX = dx / (dist * 5);
+                else t.speedX += (0 - t.speedX) * 0.01
+            } else t.speedX += (0 - t.speedX) * 0.01;
+            t.y += t.speedY;
+            t.x += t.speedX;
+            if (t.y > window.innerHeight) {
+                t.y = -5;
+                t.x = Math.random() * window.innerWidth
+            }
+            if (t.x > window.innerWidth) t.x = 0;
+            if (t.x < 0) t.x = window.innerWidth;
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${t.opacity})`;
+            ctx.fill()
+        }
+        requestAnimationFrame(anim)
+    }
+    window.__eagler_applyStarDensity = function (m) {
+        const mm = Number(m) || 1;
+        count = Math.round(base * dpr * mm);
+        resize()
+    };
+    if (!s.showStars) c.style.display = 'none';
+    else c.style.display = '';
+    __eagler_applyStarDensity(s.starDensity || 1);
+    resize();
+    requestAnimationFrame(anim)
+})();
+(function initFade() {
+    const o = new IntersectionObserver(es => {
+        for (const e of es) {
+            if (e.isIntersecting) e.target.classList.add('eagler-visible');
+            else e.target.classList.remove('eagler-visible')
+        }
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    });
+    const els = document.querySelectorAll('.eagler-category, .eagler-links a');
+    els.forEach(el => o.observe(el))
+})();
+const perf = document.getElementById('perf-panel');
+let raf = null;
+let fs = {
+    last: performance.now(),
+    frames: 0,
+    fps: 0
+};
+function startFPS() {
+    function t(ts) {
+        fs.frames++;
+        if (ts - fs.last >= 500) {
+            fs.fps = Math.round((fs.frames * 1000) / (ts - fs.last));
+            fs.frames = 0;
+            fs.last = ts;
+            document.getElementById('perf-fps').textContent = fs.fps
+        }
+        raf = requestAnimationFrame(t)
+    }
+    if (!raf) raf = requestAnimationFrame(t)
+}
+function stopFPS() {
+    if (raf) {
+        cancelAnimationFrame(raf);
+        raf = null
+    }
+}
+let pInterval = null;
+function startPerf() {
+    if (pInterval) clearInterval(pInterval);
+    pInterval = setInterval(() => {
+        if (s.perf.memory && performance && performance.memory) {
+            const used = Math.round((performance.memory.usedJSHeapSize / 1024 / 1024) * 10) / 10;
+            const lim = Math.round((performance.memory.jsHeapSizeLimit / 1024 / 1024) * 10) / 10;
+            document.getElementById('perf-memory').textContent = `${used}MB / ${lim}MB`
+        }
+        if (s.perf.deviceMemory) {
+            const dm = navigator.deviceMemory || '—';
+            document.getElementById('perf-device').textContent = dm + (dm !== '—' ? ' GB' : '')
+        }
+        if (s.perf.loadTime) {
+            const ms = Math.round((perfT.lastL || 0));
+            document.getElementById('perf-load').textContent = ms ? `${ms} ms` : '—'
+        }
+    }, 600)
+}
+function stopPerf() {
+    if (pInterval) clearInterval(pInterval);
+    pInterval = null
+}
+function applyPerf() {
+    if (s.perf && s.perf.enabled) {
+        perf.style.display = 'block';
+        document.getElementById('perf-fps-row').style.display = s.perf.fps ? '' : 'none';
+        document.getElementById('perf-memory-row').style.display = s.perf.memory ? '' : 'none';
+        document.getElementById('perf-device-row').style.display = s.perf.deviceMemory ? '' : 'none';
+        document.getElementById('perf-load-row').style.display = s.perf.loadTime ? '' : 'none';
+        if (s.perf.fps) startFPS();
+        else stopFPS();
+        startPerf()
+    } else {
+        perf.style.display = 'none';
+        stopFPS();
+        stopPerf()
+    }
+}
+function saveS() {
+    try {
+        localStorage.setItem(SKEY, JSON.stringify(s))
+    } catch (e) {
+        console.warn('ss', e)
+    }
+}
+function applyUI() {
+    const a = document.getElementById('setting-auto-fullscreen'),
+        v = document.getElementById('setting-verify-count'),
+        sd = document.getElementById('setting-star-density'),
+        ss = document.getElementById('setting-show-stars'),
+        pe = document.getElementById('setting-perf-enable'),
+        pf = document.getElementById('perf-fps'),
+        pm = document.getElementById('perf-memory'),
+        pdm = document.getElementById('perf-device-memory'),
+        plt = document.getElementById('perf-loadtime'),
+        pref = document.getElementById('setting-preferred-mirror');
+    if (a) a.checked = !!s.autoFullscreen;
+    if (v) v.value = s.verifyCount || 3;
+    if (sd) sd.value = s.starDensity || 1;
+    if (ss) ss.checked = !!s.showStars;
+    if (pe) pe.checked = !!(s.perf && s.perf.enabled);
+    if (pf) pf.checked = !!(s.perf && s.perf.fps);
+    if (pm) pm.checked = !!(s.perf && s.perf.memory);
+    if (pdm) pdm.checked = !!(s.perf && s.perf.deviceMemory);
+    if (plt) plt.checked = !!(s.perf && s.perf.loadTime);
+    document.getElementById('perf-options').style.display = (s.perf && s.perf.enabled) ? 'block' : 'none';
+    if (window.__eagler_applyStarDensity) window.__eagler_applyStarDensity(Number(s.starDensity));
+    const c = document.getElementById('eagler-stars-canvas');
+    if (c) c.style.display = s.showStars ? '' : 'none';
+    renderFavs();
+    renderRecent();
+    applyPerf();
+    if (pref) {
+        pref.innerHTML = '';
+        MIRR.forEach(m => {
+            const o = document.createElement('option');
+            o.value = m.host;
+            o.textContent = m.name;
+            pref.appendChild(o)
+        });
+        pref.value = s.preferredMirror || (MIRR[0] && MIRR[0].host) || ''
+    }
+    reorder()
+}
+function readUI() {
+    s.autoFullscreen = !!document.getElementById('setting-auto-fullscreen').checked;
+    s.verifyCount = Math.max(1, Number(document.getElementById('setting-verify-count').value) || 3);
+    s.starDensity = Number(document.getElementById('setting-star-density').value) || 1;
+    s.showStars = !!document.getElementById('setting-show-stars').checked;
+    s.perf.enabled = !!document.getElementById('setting-perf-enable').checked;
+    s.perf.fps = !!document.getElementById('perf-fps').checked;
+    s.perf.memory = !!document.getElementById('perf-memory').checked;
+    s.perf.deviceMemory = !!document.getElementById('perf-device-memory').checked;
+    s.perf.loadTime = !!document.getElementById('perf-loadtime').checked;
+    const pr = document.getElementById('setting-preferred-mirror');
+    s.preferredMirror = pr ? pr.value : ''
+}
+document.addEventListener('DOMContentLoaded', () => {
+    applyUI();
+    enhanceLinksWithFavs();
+    setDropdown('favs', false);
+    setDropdown('recent', false);
+    wire();
+    updFavs();
+    renderFavs();
+    renderRecent();
+    applyPerf()
+});
+const sBtn = document.getElementById('eagler-settings-open'),
+    sO = document.getElementById('eagler-settings-overlay'),
+    bSave = document.getElementById('btn-settings-save'),
+    bCancel = document.getElementById('btn-settings-cancel');
+sBtn.addEventListener('click', () => {
+    applyUI();
+    sO.style.display = 'flex';
+    sO.setAttribute('aria-hidden', 'false')
+});
+bCancel.addEventListener('click', () => {
+    sO.style.display = 'none';
+    sO.setAttribute('aria-hidden', 'true')
+});
+bSave.addEventListener('click', () => {
+    readUI();
+    saveS();
+    if (window.__eagler_applyStarDensity) window.__eagler_applyStarDensity(s.starDensity);
+    const c = document.getElementById('eagler-stars-canvas');
+    if (c) c.style.display = s.showStars ? '' : 'none';
+    applyPerf();
+    renderFavs(curQ);
+    renderRecent(curQ);
+    sO.style.display = 'none'
+});
+document.getElementById('setting-perf-enable').addEventListener('change', e => {
+    document.getElementById('perf-options').style.display = e.target.checked ? 'block' : 'none'
+});
+sO.addEventListener('click', ev => {
+    if (ev.target === sO) {
+        sO.style.display = 'none';
+        sO.setAttribute('aria-hidden', 'true')
+    }
+});
+function wire() {}
+window.eagler = {
+    s,
+    saveS,
+    toggleFav,
+    renderFavs,
+    renderRecent,
+    addRecent
+};
+
+(async function redirectToNewestOffline_WithParenNames() {
+  const PREFIX = 'Offline_Minified_Version';
+  const EXT = '.html';
+  const MAX_CHECK = 100;       
+  const CACHE_MODE = 'no-store';
+
+  const basePath = (function () {
+    const p = location.pathname;
+    return p.substring(0, p.lastIndexOf('/') + 1);
+  })();
+
+  const curMatch = location.pathname.match(new RegExp(`${PREFIX}\\s*\\((\\d+)\\)${EXT}$`, 'i'));
+  const currentVersion = curMatch ? Number(curMatch[1]) : 0;
+
+  let probeStart = currentVersion > 0 ? currentVersion + 1 : 1;
+  let highestFound = currentVersion;
+
+  async function exists(url) {
+    try {
+      const head = await fetch(url, { method: 'HEAD', cache: CACHE_MODE });
+      if (head.ok) return true;
+      if (head.status === 405 || head.status === 501) {
+
+        const get = await fetch(url, { method: 'GET', cache: CACHE_MODE, headers: { Range: 'bytes=0-0' } });
+        return get.ok;
+      }
+      return false;
+    } catch (e) {
+
+      return false;
+    }
+  }
+
+  for (let i = probeStart; i <= MAX_CHECK; i++) {
+    const filename = `${PREFIX} (${i})${EXT}`;               
+    const url = `${location.origin}${basePath}${encodeURIComponent(filename)}`; 
+
+    const ok = await exists(url);
+
+    if (ok) {
+      highestFound = i;
+      continue; 
+    } else {
+      break; 
+    }
+  }
+
+  if (highestFound > currentVersion) {
+    const filename = `${PREFIX} (${highestFound})${EXT}`;
+    const redirectUrl = `${location.origin}${basePath}${encodeURIComponent(filename)}`;
+
+    location.replace(redirectUrl);
+    return;
+  }
+
+})();
+
+
+
+function updateSettingsVisibility() {
+  try {
+    const btn = document.getElementById('eagler-settings-open');
+    if (!btn) return;
+
+    // If the whole page is embedded in an iframe (top != self), hide the button.
+    const inEmbed = (window.self !== window.top);
+
+    // If the app's own iframe overlay is present (eagler iframe / flap / any iframe we create), hide the button.
+    const hasEaglerIframe = !!document.getElementById('eagler-iframe') || !!document.getElementById('eagler-flap');
+
+    if (inEmbed || hasEaglerIframe) {
+      btn.style.display = 'none';
+    } else {
+      btn.style.display = '';
+    }
+  } catch (e) {
+    console.warn('updateSettingsVisibility error', e);
+  }
+}
+
+// Run once on load
+document.addEventListener('DOMContentLoaded', updateSettingsVisibility);
+
+// Observe DOM changes so opening/closing the iframe (or flap) automatically updates the button
+const __settingsVisObserver = new MutationObserver(() => updateSettingsVisibility());
+__settingsVisObserver.observe(document.body, { childList: true, subtree: true });
+
+// Also update when a few relevant events happen (fullscreen/pointerlock changes etc.)
+['resize','fullscreenchange','pointerlockchange','message'].forEach(ev => {
+  window.addEventListener(ev, updateSettingsVisibility, { passive: true });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/socket.io@4.8.1/client-dist/socket.io.min.js"></script>
+<script>
+  const statsSocket = io("https://streamamethyst.org/eagler", {
+    transports: ['websocket']
+  });
+
+  (function ensureUI() {
+    let el = document.getElementById('online-count');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'online-count';
+      el.style.position = 'fixed';
+      el.style.right = '16px';
+      el.style.bottom = '16px';
+      el.style.fontWeight = 'bold';
+      el.style.color = 'white';
+      el.style.fontFamily = 'sans-serif';
+      document.body.appendChild(el);
+    }
+  })();
+  
+  statsSocket.on('eagler-online', ({ online } = {}) => {
+    const e = document.getElementById('online-count');
+    if (e) e.textContent = `People Using EaglerHost: ${online}`;
+  });
+
+  statsSocket.on('eagler-top', rows => {
+    console.log('Top games (week):', rows);
+  });
+
+  function recordLaunch(path) {
+    try { statsSocket.emit('eagler-play', { game: path }); } catch(e){}
+  }
+  window.recordLaunch = recordLaunch;
+
+  if (typeof window.launch === 'function') {
+    const origLaunch = window.launch;
+    window.launch = function(path, el) {
+      try {
+        statsSocket.emit('play', { game: path });
+      } catch (e) { console.warn('stats emit failed', e); }
+      return origLaunch.apply(this, arguments);
+    }
+  } else {
+    window.recordLaunch = (path) => {
+      try { statsSocket.emit('play', { game: path }); } catch(e){}
+    }
+  }
+</script>
+</body>
+</html>

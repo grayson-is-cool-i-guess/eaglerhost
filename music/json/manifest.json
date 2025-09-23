@@ -1,0 +1,85 @@
+window.MANIFEST = {
+  zips: [
+    // Kendrick Lamar (77.4M)
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20GNX%20(2024).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20Mr.%20Morale%20%26%20The%20Big%20Steppers%20(2022).zip",
+    "https://static.ishotupa.school/DAMN.zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20To%20Pimp%20A%20Butterfly%20(2015).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20good%20kid,%20m.A.A.d%20city%20(Deluxe)%20(2012).zip",
+    "https://static.ishotupa.school/Kendrick%20Lamar%20-%20Section.80%20(2011).zip",
+
+    // Eminem (67.0M)
+    "https://static.ishotupa.school/Eminem%20-%20The%20Death%20of%20Slim%20Shady%20(Coup%20De%20Gr%C3%A2ce)%20(2024).zip",
+    "https://static.ishotupa.school/Eminem%20-%20Recovery%20(Clean)%20(2009).zip",
+    "https://static.ishotupa.school/Eminem%20-%20Curtain%20Call_%20The%20Hits%20(2005).zip",
+    "https://static.ishotupa.school/Eminem%20-%20The%20Eminem%20Show%20(2002).zip",
+
+    // Travis Scott (64.2M)
+    "https://static.ishotupa.school/Travis%20Scott%20-%20ASTROWORLD%20%20(2018).zip",
+
+    // Kanye West (59.6M)
+    "https://static.ishotupa.school/Kanye%20West%20-%20ye%20(2018).zip",
+    "https://static.ishotupa.school/Kanye%20West%20-%20My%20Beautiful%20Dark%20Twisted%20Fantasy%20(2010).zip",
+    "https://static.ishotupa.school/Kanye%20West%20-%20Graduation%20(2007).zip",
+
+    // Arctic Monkeys (52.7M)
+    "https://static.ishotupa.school/Arctic%20Monkeys%20-%20Favourite%20Worst%20Nightmare%20(Standard)%20(2007).zip",
+
+    // Tyler, The Creator (45.2M) — newest → oldest
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20DON'T%20TAP%20THE%20GLASS%20(2025).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CHROMAKOPIA%20(2024).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CALL%20ME%20IF%20YOU%20GET%20LOST_%20The%20Estate%20Sale%20(2023).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20CALL%20ME%20IF%20YOU%20GET%20LOST%20(2021).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20IGOR%20(2019).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Flower%20Boy%20(2017).zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Cherry%20Bomb%20(2015).zip",
+    "https://static.ishotupa.school/Wolf.zip",
+    "https://static.ishotupa.school/Tyler,%20The%20Creator%20-%20Goblin%20(2011).zip",
+
+    // Don Toliver (38.5M)
+    "https://static.ishotupa.school/Don%20Toliver%20-%20HARDSTONE%20PSYCHO%20(2024).zip",
+
+    // Kali Uchis (35.2M)
+    "https://static.ishotupa.school/Kali%20Uchis%20-%20Isolation%20(2018).zip",
+
+    // Juice WRLD (27.7M)
+    "https://static.ishotupa.school/Juice%20WRLD%20-%20Death%20Race%20For%20Love%20(2019).zip",
+
+    // Lil Uzi Vert (25.9M)
+    "https://static.ishotupa.school/Lil%20Uzi%20Vert%20-%20Luv%20Is%20Rage%202%20(2017).zip",
+
+    // Lil Tecca (23.8M)
+    "https://static.ishotupa.school/Lil%20Tecca%20-%20DOPAMINE%20(2025).zip",
+
+    // beabadoobee (23.8M)
+    "https://static.ishotupa.school/beabadoobee%20-%20Beatopia%20(2022).zip",
+
+    // TV Girl (20.3M) — newest → oldest
+    "https://static.ishotupa.school/TV%20Girl%20-%20Grapes%20Upon%20the%20Vine%20(2023).zip",
+    "https://static.ishotupa.school/TV%20Girl%20-%20Who%20Really%20Cares%20(2016).zip",
+    "https://static.ishotupa.school/TV%20Girl%20-%20French%20Exit%20(2014).zip",
+
+    // Imogen Heap (18.4M)
+    "https://static.ishotupa.school/Imogen%20Heap%20-%20Speak%20for%20Yourself%20(Deluxe)%20(2005).zip",
+
+    // bôa (10.95M)
+    "https://static.ishotupa.school/b%C3%B4a%20-%20Twilight%20(2001).zip",
+
+    // MF DOOM (7.8M)
+    "https://static.ishotupa.school/MF%20DOOM%20-%20MM..FOOD%20(2004).zip",
+
+    // JoJo / Jøjo (4.2M)
+    "https://static.ishotupa.school/J%C3%B8jo%20-%20ROMANCE%20DAWN%20(2024).zip",
+
+    // Glaive (1.1M) — newest → oldest
+    "https://static.ishotupa.school/Glaive%20-%20May%20It%20Never%20Falter%20(2024).zip",
+    "https://static.ishotupa.school/Glaive%20-%20i%20care%20so%20much%20that%20i%20dont%20care%20at%20all%20(2023).zip",
+    "https://static.ishotupa.school/Glaive%20-%20cypress%20grove%20(2020).zip",
+
+    // ericdoa (694K)
+    "https://static.ishotupa.school/Ericdoa%20-%20why%20suffer%20for%20us_%20(2024).zip",
+
+    // Lil Melo (~67 monthly listeners)
+    "https://static.ishotupa.school/Lil%20Melo%20-%20ANGELS%20CRY%20TOO%20(2025).zip"
+  ]
+};
