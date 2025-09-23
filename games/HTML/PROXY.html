@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>its 4 am and wuz too lazy so i used gpt for ts</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: sans-serif;
+    background-color: #111;
+    color: #fff;
+  }
+
+  #menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 20px;
+  }
+
+  .site-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #222;
+    border: 2px solid #fff;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .site-button:hover {
+    background-color: #fff;
+    color: #111;
+  }
+</style>
+</head>
+<body>
+
+<div id="menu">
+  <h1>select a server (some may be blocked)</h1>
+  <button class="site-button" onclick="openServer('https://ishotupa.school')">Server 1</button>
+  <button class="site-button" onclick="openServer('http://site2.example.com')">Server 2</button>
+  <button class="site-button" onclick="openServer('http://site3.example.com')">Server 3</button>
+</div>
+
+<script>
+function openServer(url) {
+  // Open about:blank first
+  const newWindow = window.open('about:blank', '_blank');
+  
+  // Give the blank page a tiny delay before loading the real site
+  setTimeout(() => {
+    newWindow.location.href = url;
+  }, 50); // 50ms delay is usually enough
+}
+</script>
+
+</body>
+</html>

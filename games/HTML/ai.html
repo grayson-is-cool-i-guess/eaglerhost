@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tuffnet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #fff;
+  }
+
+  .chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    background: #252525;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chat-header button {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+  }
+
+  .chat-header button:hover {
+    background: #555;
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    background: #1e1e1e;
+  }
+
+  .message {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 20px;
+    word-wrap: break-word;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+.user {
+  align-self: flex-end;
+  background: #ccc; 
+  color: #000;      
+  border-bottom-right-radius: 4px;
+}
+
+  .ai {
+    align-self: flex-start;
+    background: #333;
+    color: #fff;
+    border-bottom-left-radius: 4px;
+  }
+
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #444;
+    background: #252525;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: inherit;
+    background: #2b2b2b;
+    color: #fff;
+  }
+
+.chat-input button {
+  background: #ccc;  
+  color: #000;
+  border: none;
+  padding: 0 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-input button:hover {
+  background: #ddd;
+}
+
+  .typing {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 60px;
+    padding: 12px 16px;
+    border-radius: 20px;
+    background: #333;
+    color: #fff;
+    font-size: 18px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: blink 1.4s infinite both;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
+  .message strong { font-weight: bold; }
+  .message em { font-style: italic; }
+  .message code { background: #444; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+
+</style>
+</head>
+<body>
+<div class="chat-container">
+  <div class="chat-header">
+    <span>Tuff</span>
+    <button onclick="clearChat()">Clear</button>
+  </div>
+  <div class="chat-messages" id="messages"></div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter'){sendMessage()}">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+<script>
+const apiKey = "AIzaSyAA-5rmpSvu1wNX_bxCoZw-bZSapMehj5c";
+const messagesDiv = document.getElementById('messages');
+
+// Arrays to store conversation memory
+let userMessages = [];
+let aiMessages = [];
+
+async function addAIMessage(text) {
+  const msg = document.createElement('div');
+  msg.className = 'message ai';
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  const words = text.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    msg.innerHTML += (i === 0 ? '' : ' ') + words[i];
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    await new Promise(r => setTimeout(r, 50)); 
+  }
+}
+
+function clearChat() {
+  messagesDiv.innerHTML = '';
+  userMessages = [];
+  aiMessages = [];
+}
+
+function addMessage(text, type) {
+  const msg = document.createElement('div');
+  msg.className = 'message ' + type;
+
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  text = text.replace(/`(.*?)`/g, '<code>$1</code>');
+
+  msg.innerHTML = text;
+
+  msg.oncontextmenu = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(text.replace(/<[^>]*>/g, ''));
+    alert('Copied to clipboard!');
+  }
+
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage(text, 'user');
+  userMessages.push(text);
+  input.value = '';
+
+  const typingBubble = document.createElement('div');
+  typingBubble.className = 'typing';
+  typingBubble.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  messagesDiv.appendChild(typingBubble);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  try {
+    let memoryPrompt = "";
+    for (let i = 0; i < userMessages.length; i++) {
+      memoryPrompt += `User: ${userMessages[i]}\nAI: ${aiMessages[i] || ""}\n`;
+    }
+    memoryPrompt += `User: ${text}`;
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: memoryPrompt }] }]
+        })
+      }
+    );
+
+    const data = await response.json();
+    console.log("Full Gemini Response:", data);
+
+    let aiText = "Sorry, no response.";
+    const firstCandidate = data?.candidates?.[0];
+    if (firstCandidate?.content?.parts?.length > 0) {
+      aiText = firstCandidate.content.parts.map(p => p.text || "").join("\n");
+    }
+
+    typingBubble.remove();
+    await addAIMessage(aiText);
+
+    aiMessages.push(aiText);
+
+  } catch (err) {
+    console.error("Error calling Gemini API:", err);
+    typingBubble.remove();
+    addMessage("Error: Could not reach AI.", 'ai');
+  }
+}
+</script>
+</body>
+</html>

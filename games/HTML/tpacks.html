@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPacks</title>
+    <style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; 
+    background: linear-gradient(45deg, #ff7eb9, #6a82fb); 
+    background-size: 400% 400%;
+    animation: gradientBackground 5s ease infinite; 
+    color: white; 
+    text-align: center;
+    margin: 0;
+    padding: 50px 20px;
+    line-height: 1.6;
+}
+
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+h1 {
+    font-size: 3rem; 
+    margin-bottom: 20px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px; 
+    animation: fadeIn 1.5s ease-out; 
+}
+
+b {
+    display: block;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+a {
+    display: inline-block;
+    margin: 15px 0;
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: white;
+    background-color: #8e44ad; 
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+a:hover {
+    background-color: #3498db;
+    transform: translateY(-6px); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); 
+}
+
+a:active {
+    background-color: #2980b9;
+    transform: translateY(2px); 
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+a:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.5); 
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 30px 10px;
+    }
+
+    h1 {
+        font-size: 2.4rem;
+    }
+
+    a {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>eagler texture packs</h1>
+
+	<b>Click any of the buttons below to download an Eaglercraft 1.12.2 TPack.</b>
+    <a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=1Ao4-BecVxz0Ho1L3dK-SJN-dBHOqmV0p&export=download')">Azurite</a>
+		<b>A really clean PvP texture pack.</b>
+    <a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=1FNjYKNNlHYK4HBWhFcxhrjRug1ss_uSn&export=download')">Modernity</a>
+		<b>A texture pack that replicates newer versions of Minecraft.</b>
+	<a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=1jj1iY08MG5aIm4-ljJMaA62kr4pLvHvq&export=download')">Skeppy Revamp</a>
+		<b>Based off of the texture pack that Skeppy uses. A bit buggy.</b>
+	<a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=1pgDryrOpAEMBNjuH_LMnP5p7xw1xvzmA&export=download')">Xray</a>
+		<b>For those who suck at playing!</b>
+	<a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=17vlNPv3lnXz8hMHJmQrK-ogF7gmXiPbT&export=download')">Dramatic Skies</a>
+		<b>Super cool uh new skies!</b>
+	<a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=1LR-DEmmcu9-mtUz6Bjsj3x2OokXDvB8l&export=download')">Default HD 512x</a>
+		<b>Makes like every texture WAY higher quality.</b>
+	<a onclick="redirect('https://drive.usercontent.google.com/u/0/uc?id=17asL_DGkvXVQLbusfKfHk11-krn5NSnn&export=download')">Alpha Pack</a>
+		<b>Return back to the alpha days of minecraft!</b>
+</body>
+<script>
+function redirect(url) {
+
+window.open(url);
+}
+</script>
+</html>

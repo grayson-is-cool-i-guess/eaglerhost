@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server List</title>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    padding: 30px;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .server-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .server {
+    border-radius: 12px;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .server:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  }
+  
+  .server-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .server-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #4caf50;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .server-info {
+    flex: 1;
+  }
+  
+  .server-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+  
+  .server-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #b0b0b0;
+  }
+
+  .tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    background-color: #6200ea;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .tag:hover {
+    background-color: #3700b3;
+  }
+
+  .server-footer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .status {
+    font-weight: bold;
+    font-size: 14px;
+    color: #4caf50;
+  }
+  
+  .status.offline {
+    color: #f44336;
+  }
+  
+  .footer-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-button {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #6200ea;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .action-button:hover {
+    background-color: #3700b3;
+  }
+  
+  .action-button:focus {
+    outline: none;
+  }
+</style>
+</head>
+<body>
+
+<h3>Top Servers RIGHT NOW!</a>
+<p>1. wss://eagler.crackedpvp.club</p>
+<p>2. wss://mc.arch.lol</p>
+<p>3. wss://mc.asspixel.net</p>
+<p>4. wss://blobcraft.club</p>
+<div></div>
+<div></div><div></div>
+  <div class="server-container" id="server-container">
+  </div>
+  <script>
+    const data = [
+      {
+      "uuid": "5d510413-6bb5-4a58-82c9-a76b9abd3c11",
+      "name": "☭ CommunistMC ☭",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:03:44.555Z",
+      "address": "wss://communistmc.xyz",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "558f9b2a-f544-44a8-a039-efb73c4184dc",
+        "id": 143,
+        "username": "PythonScratcher",
+        "avatar": "https://cdn.discordapp.com/avatars/766324649411608589/a26c7e4d998e12e75f8fd30074b30f60.png"
+      }
+    },
+    {
+      "uuid": "36dcc599-6dc7-4eca-9899-72c244fe47f1",
+      "name": "TimeLegacy",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 15
+      },
+      "lastPinged": "2025-03-14T00:03:44.554Z",
+      "address": "wss://mc.time-legacy.net/",
+      "votes": -3,
+      "tags": [
+        "SKYBLOCK",
+        "RPG",
+        "PVP",
+        "PVE",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "ed342b55-0d32-40b9-816f-461c11256bd0",
+        "id": 8,
+        "username": "les",
+        "avatar": "https://cdn.discordapp.com/avatars/1125578028248989817/0f338a56113086add83399d792784b2a.png"
+      }
+	  },
+    {
+      "uuid": "2299e8b5-8ecf-49d1-b68b-255c2ff57e4d",
+      "name": "contrabell",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:38.919Z",
+      "address": "wss://contrabell.bytommy.uk",
+      "votes": 0,
+      "tags": [
+        "MINIGAMES",
+        "MISCELLANEOUS",
+        "PVP"
+      ],
+      "user": {
+        "uuid": "5398c620-64c6-4e83-9a7e-99c77df72422",
+        "id": 2538,
+        "username": "Tommy",
+        "avatar": "https://cdn.discordapp.com/avatars/1207909535935762503/f530fd8078fd6054a8b985d59902fbf4.png"
+      }
+    },
+    {
+      "uuid": "5d510413-6bb5-4a58-82c9-a76b9abd3c11",
+      "name": "☭ CommunistMC ☭",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.720Z",
+      "address": "wss://communistmc.xyz",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "558f9b2a-f544-44a8-a039-efb73c4184dc",
+        "id": 143,
+        "username": "PythonScratcher",
+        "avatar": "https://cdn.discordapp.com/avatars/766324649411608589/a26c7e4d998e12e75f8fd30074b30f60.png"
+      }
+    },
+    {
+      "uuid": "9c31d6a3-0306-426d-8b09-4881d11928c6",
+      "name": "eagworld",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:41.573Z",
+      "address": "wss://play.eagworld.net",
+      "votes": 0,
+      "tags": [
+        "MINIGAMES",
+        "SURVIVAL",
+        "PVP",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "0987f067-885f-48d4-8c5d-26a44fce989e",
+        "id": 2807,
+        "username": "tlochsta",
+        "avatar": "https://cdn.discordapp.com/avatars/795039947656134728/919a91831880664d6e9ff4ff677d9595.png"
+      }
+    },
+    {
+      "uuid": "73d7dc4a-75b3-4905-a90a-23d7aae982a7",
+      "name": "HollowNet",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.871Z",
+      "address": "wss://hollow.network",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "SURVIVAL",
+        "PVE",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "5b9716e9-6913-494a-ab02-485f16c3bc7a",
+        "id": 9230,
+        "username": "akane",
+        "avatar": "https://cdn.discordapp.com/avatars/1052016750486638613/b1b03c0decf523b4bb33e5a6c3cad0eb.png"
+      }
+    },
+    {
+      "uuid": "af17f49e-1c09-4bfa-82be-1cdf48177b6d",
+      "name": "Mainbird Practice",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.187Z",
+      "address": "wss://ec.mainbird.org",
+      "votes": 0,
+      "tags": [
+        "PVP"
+      ],
+      "user": {
+        "uuid": "280aca9a-bd5a-4b1e-8345-8e0880c3bdb7",
+        "id": 65,
+        "username": "Winix",
+        "avatar": "https://cdn.discordapp.com/avatars/834186961530126376/e04ae2d6ef239af4d6403d32636664af.png"
+      }
+    },
+    {
+      "uuid": "bd0fa7b4-c41e-4998-bb7f-971c0aed8e9a",
+      "name": "ADSCRAFT / The Porcupine Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.313Z",
+      "address": "wss://mc.canarycraft.org",
+      "votes": 0,
+      "tags": [
+        "FACTIONS",
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "PVP",
+        "RPG"
+      ],
+      "user": {
+        "uuid": "9d38d72e-ca54-4d7d-a8fb-f9f94147fb9c",
+        "id": 1343,
+        "username": "𝓠𝓾𝓲𝔃𝔃𝓲𝓽𝔂",
+        "avatar": "https://cdn.discordapp.com/avatars/1205250578637262858/f6401d83ec16bc02ae799e33856a0076.png"
+      }
+    },
+    {
+      "uuid": "20be2e30-c4a5-4e80-a9b3-7b70034dde9a",
+      "name": "Chirp",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.047Z",
+      "address": "wss://eagler.electcell.uk",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "146df92d-2c4f-4d37-a2ca-a161eb276710",
+        "id": 7048,
+        "username": ".",
+        "avatar": "https://cdn.discordapp.com/avatars/1248814533020221480/null.png"
+      }
+    },
+    {
+      "uuid": "18631d70-3d65-4a5b-af90-5d56eb42f536",
+      "name": "ViaProxyShared",
+      "verified": true,
+      "approved": true,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.439Z",
+      "address": "wss://via.shhnowisnottheti.me",
+      "votes": 0,
+      "tags": [
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "a156934f-6d36-49d4-bc2d-38a4881d4cbf",
+        "id": 244,
+        "username": "ayunami2000",
+        "avatar": "https://cdn.discordapp.com/avatars/214118574485143553/33b31bca5274e17348f239a4bc0faf8a.png"
+      }
+    },
+    {
+      "uuid": "dc381840-fbfc-4bd0-bb1b-86d612d7f3f3",
+      "name": "NecronNetwork",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.190Z",
+      "address": "wss://necronis.betterthanarchmc.lol/",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "cda5bb0b-3b7f-41b0-918f-7ab8a98c67e4",
+        "id": 869,
+        "username": "MyLifeDoesSadThings",
+        "avatar": "https://cdn.discordapp.com/avatars/1127064854293913610/2b566e17078b8b575e5e90c4d576eef9.png"
+      }
+    },
+    {
+      "uuid": "47a6f4ec-b3f0-4aa0-98c0-9b85dd720ff5",
+      "name": "FrienMC",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.898Z",
+      "address": "wss://eagler.frien.org",
+      "votes": 0,
+      "tags": [
+        "PVE",
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "d5524f02-cd11-425b-bb3e-b25534b76505",
+        "id": 11,
+        "username": "Charmunk",
+        "avatar": "https://cdn.discordapp.com/avatars/877943739824365588/a_8c8b668ad420109cc49842d1561d433a.png"
+      }
+    },
+    {
+      "uuid": "1b4a7f7d-6a94-4b71-a78e-5c72f9d9aedf",
+      "name": "Poison Anarchy",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.418Z",
+      "address": "wss://poison.rocks",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "9f3303cc-beb7-4316-ba66-adbd29938d65",
+        "id": 3694,
+        "username": "Madmen",
+        "avatar": "https://cdn.discordapp.com/avatars/836096719678472252/626f4bf1f78762532e29e0ffa8fd2ef2.png"
+      }
+    },
+    {
+      "uuid": "ae3f3b96-5acd-447d-b0ae-09b807577cb1",
+      "name": "The Builders SMP",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.734Z",
+      "address": "wss://hey.ctm.com.ar",
+      "votes": 0,
+      "tags": [
+        "CREATIVE",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "2586cf85-05b1-4392-a9a7-4f04708db575",
+        "id": 5204,
+        "username": "MjPlaysGames",
+        "avatar": "https://cdn.discordapp.com/avatars/1064290762340188240/a01e325d8157a53a696007944056a373.png"
+      }
+    },
+    {
+      "uuid": "9f6af2e1-bcc4-42f7-9438-6b689d95cd2e",
+      "name": "Based MC",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.318Z",
+      "address": "wss://eagler.basedmc.club",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVP",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "8a852c99-d852-40b5-aa10-f39314dda951",
+        "id": 7446,
+        "username": "bacalhau",
+        "avatar": "https://cdn.discordapp.com/avatars/491667148503253010/4f57c63c0e6c5593e4df36a3a4e27bc2.png"
+      }
+    },
+    {
+      "uuid": "cc6d4a92-205d-456f-8de3-1be4d7e8a48f",
+      "name": "Neutine: Rebirth",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.732Z",
+      "address": "wss://eg.neutine.net",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "RPG",
+        "PVP",
+        "PVE",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "2d3a7208-f279-4f72-b476-bef19578c948",
+        "id": 293,
+        "username": "Surden",
+        "avatar": "https://cdn.discordapp.com/avatars/333342504869167105/9e2305c0314816aff21869fcd97ccb67.png"
+      }
+    },
+    {
+      "uuid": "6d385f95-5509-4b81-9176-68525617759a",
+      "name": "Ethereal",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 16
+      },
+      "lastPinged": "2025-03-14T00:02:38.557Z",
+      "address": "wss://ethereal.mov",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "2ad9c144-2dc8-488b-81d2-5353cae49a2c",
+        "id": 2174,
+        "username": "sky <3",
+        "avatar": "https://cdn.discordapp.com/avatars/1014608595263950848/54e05b1aaf97b1c77e16a3b919873c5b.png"
+      }
+    },
+    {
+      "uuid": "7380442f-45d2-47cd-8e0f-463a39e52f9e",
+      "name": "WAP Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.125Z",
+      "address": "wss://wapnetwork.net",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVP"
+      ],
+      "user": {
+        "uuid": "79497991-487b-4b48-a4df-682693cca7dd",
+        "id": 5192,
+        "username": "ddgwap",
+        "avatar": "https://cdn.discordapp.com/avatars/815736394827038790/ff96c601456c1c43e0edf9fe1c4688d1.png"
+      }
+    },
+    {
+      "uuid": "a18d15fe-a4c8-498b-899c-730400782fa1",
+      "name": "Pnut22 And Colbster937 smp",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.815Z",
+      "address": "wss://pnutserver.colbster937.dev",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "a16c509c-af38-47a0-8ba1-2013e0c2c46f",
+        "id": 2197,
+        "username": "Pnut22craced",
+        "avatar": "https://cdn.discordapp.com/avatars/1131263729305141329/2f2d2fd1a1bfe081a7e44eeab87d817d.png"
+      }
+    },
+    {
+      "uuid": "eee8ad19-c51a-4879-9131-05d2cbdcc830",
+      "name": "Galactic Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:40.021Z",
+      "address": "wss://galacticnet.cfd",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "SURVIVAL",
+        "PRISON",
+        "MISCELLANEOUS",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "0468c530-a19b-4e30-b4a7-53073f7d1f30",
+        "id": 205,
+        "username": "ponkstars",
+        "avatar": "https://cdn.discordapp.com/avatars/1184273208703209472/614ce6252881b53a40619fcf60b25767.png"
+      }
+    },
+    {
+      "uuid": "a43c0bf2-e234-4ca9-b847-76a8d29f40f2",
+      "name": "PlebMc",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:40.036Z",
+      "address": "wss://eagler.plebmc.top",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "MINIGAMES",
+        "SURVIVAL",
+        "RPG",
+        "MISCELLANEOUS",
+        "PVE",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "da9b2750-b723-4963-8d3a-f29e85c5acb2",
+        "id": 15,
+        "username": "Mighty",
+        "avatar": "https://cdn.discordapp.com/avatars/737476508276228096/1fda13fded3413734960394929ab7c06.png"
+      }
+    },
+    {
+      "uuid": "7fe2daab-3416-4647-9ca3-3674b84ca3a3",
+      "name": "Survival Sanctuary & Cheese Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.534Z",
+      "address": "wss://kyle.cyberward.xyz",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "FACTIONS",
+        "MINIGAMES",
+        "SURVIVAL",
+        "CREATIVE",
+        "SKYBLOCK",
+        "PRISON",
+        "RPG",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "34863b49-d05f-484f-832e-80bfaf860d55",
+        "id": 7622,
+        "username": "Kyle",
+        "avatar": "https://cdn.discordapp.com/avatars/1286155737579520062/803ca76d4ce22ae669c72240a71cfae5.png"
+      }
+    },
+    {
+      "uuid": "7dc17e02-e83d-4353-9ac9-6852ddd745a4",
+      "name": "JN | Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.855Z",
+      "address": "wss://play.junarmc.xyz",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "5bb2fa85-5689-4651-b9ae-e62ad70f4ac1",
+        "id": 1698,
+        "username": "NotJunar",
+        "avatar": "https://cdn.discordapp.com/avatars/1091865918461718660/69d466e85c84d04118e5cb0685b91780.png"
+      }
+    },
+    {
+      "uuid": "66b82266-34a1-4d88-93fa-85e5d04d3ef0",
+      "name": "Citri | 1.21 WORLD GEN",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.228Z",
+      "address": "wss://play.citri.xyz",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "PVP",
+        "MINIGAMES",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "2c66ac9d-dfec-4433-a22d-12fbfda5fbeb",
+        "id": 13508,
+        "username": "Fault",
+        "avatar": "https://cdn.discordapp.com/avatars/1129109476130177025/null.png"
+      }
+    },
+    {
+      "uuid": "7b9d6278-8527-45a9-b12c-8b354266c50a",
+      "name": "WestVanilla",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.167Z",
+      "address": "wss://west-vanilla.org",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "32c77336-4796-409f-b360-961944c0a5ff",
+        "id": 16272,
+        "username": "sysmint!",
+        "avatar": "https://cdn.discordapp.com/avatars/1325130170318983212/111e96e178738b89ba7d198ac8ae0828.png"
+      }
+    },
+    {
+      "uuid": "7b33a606-1649-45a6-ab4b-3fb24bc1d922",
+      "name": "Huntools",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.033Z",
+      "address": "wss://craft.huntools-bot.xyz",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "MINIGAMES",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "82c38313-1b17-4dfc-851d-14c6a0462e3b",
+        "id": 8244,
+        "username": "Beni",
+        "avatar": "https://cdn.discordapp.com/avatars/801162422580019220/671dcf03377274db3494348e0ada8bab.png"
+      }
+    },
+    {
+      "uuid": "8c4b9da0-a91f-4ca8-8a69-5df6956f8cc6",
+      "name": "Complexity Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 8
+      },
+      "lastPinged": "2025-03-14T00:02:39.656Z",
+      "address": "wss://complex.lat",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVP",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "be73ebd7-14ef-4889-958d-e1e86e7f7d63",
+        "id": 2455,
+        "username": "jolly frogiee1",
+        "avatar": "https://cdn.discordapp.com/avatars/863178429213179984/708f9de9e6aaa284fc76d2b09576ca09.png"
+      }
+    },
+    {
+      "uuid": "d6d06fd0-e555-46b6-b118-5a23e4d853c4",
+      "name": "KornCore",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.658Z",
+      "address": "wss://core.kornineq.de/",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVP"
+      ],
+      "user": {
+        "uuid": "b5b7ebd2-f80f-447e-9e4f-f88991ce42f3",
+        "id": 13134,
+        "username": "nwero",
+        "avatar": "https://cdn.discordapp.com/avatars/827566681311150090/e4a3efda4dba5b00d90e8b8c81d91a9d.png"
+      }
+    },
+    {
+      "uuid": "947d9c3d-0138-4860-84ec-80b30667f755",
+      "name": "ZelimSMP",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.725Z",
+      "address": "wss://smp.zelimmc.com",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "MINIGAMES",
+        "PVP"
+      ],
+      "user": {
+        "uuid": "01785aa6-e104-4700-b6ca-4bf355cead8a",
+        "id": 439,
+        "username": "Toko LISK",
+        "avatar": "https://cdn.discordapp.com/avatars/1135544445270503444/77b3d2f3358c463c6067dad7605d45da.png"
+      }
+    },
+    {
+      "uuid": "4dd1aa26-a041-482a-81cf-d6a4f0b679e4",
+      "name": "ColdHeart Survival",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.928Z",
+      "address": "wss://eagler.coldheart.net",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "54efd2a8-a021-4e59-96cd-7c1d77865c05",
+        "id": 18434,
+        "username": "Karl The Koala",
+        "avatar": "https://cdn.discordapp.com/avatars/1054294888134492170/21dbad5be2879f86ce345bbe98dd53eb.png"
+      }
+    },
+    {
+      "uuid": "3bd79a9d-dacd-4f47-b572-99cbabcefce5",
+      "name": "TeamHolyTOP",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.208Z",
+      "address": "wss://eagle.teamholy.top",
+      "votes": 0,
+      "tags": [
+        "MINIGAMES",
+        "PVP",
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "75273c5f-cfa1-436d-8619-a5dba747a066",
+        "id": 13022,
+        "username": "mctcp.ovh",
+        "avatar": "https://cdn.discordapp.com/avatars/964523588101218314/ffe71316921d037c67906a6cd72cfe1e.png"
+      }
+    },
+    {
+      "uuid": "35c22056-0ee4-4230-85b1-376dc8e47bd2",
+      "name": "SuckMyCraft",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.764Z",
+      "address": "wss://join.suckmycraft.online/",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "75c253cf-d00f-4dda-82a7-b28b3f2d8299",
+        "id": 3990,
+        "username": "Matthew",
+        "avatar": "https://cdn.discordapp.com/avatars/778722739552518185/31ec4f35b06eb5700ac2beff72380a4e.png"
+      }
+    },
+    {
+      "uuid": "bc406f56-c93d-49a7-98e7-9d1269375c52",
+      "name": "Mazarca",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.915Z",
+      "address": "wss://eagler.maza64.xyz",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "CREATIVE",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "401da156-3e12-4708-8f15-2826468789ea",
+        "id": 8332,
+        "username": "maza",
+        "avatar": "https://cdn.discordapp.com/avatars/1217228917342208066/1f347a896615592fce26611af3542f48.png"
+      }
+    },
+    {
+      "uuid": "18dd5650-67d1-4f56-a1a0-2d6f6036b565",
+      "name": "RealmsNetwork",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.175Z",
+      "address": "wss://realmsnetwork.work.gd:8080",
+      "votes": 1,
+      "tags": [
+        "PRISON",
+        "SURVIVAL",
+        "FACTIONS",
+        "SKYBLOCK",
+        "CREATIVE",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "18bb9436-2b6a-461d-81af-ea62e729ddb1",
+        "id": 19508,
+        "username": "THEMPGUY",
+        "avatar": "https://cdn.discordapp.com/avatars/1145167986613821453/fcfa89c0ce9b076bb3dbbb27e164490f.png"
+      }
+    },
+    {
+      "uuid": "e2228624-300c-4873-a600-255ffbc6d5aa",
+      "name": "Flame Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.726Z",
+      "address": "wss://firemc.usereverse.com/",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "MINIGAMES",
+        "PVE",
+        "PVP",
+        "RPG",
+        "MISCELLANEOUS",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "ba9ca525-4ff7-4461-9d55-9b1cdc035ffc",
+        "id": 11044,
+        "username": "! . * , DhyeyBG , * . !",
+        "avatar": "https://cdn.discordapp.com/avatars/1235656180333019216/5bd814a504941d130404b14ac1b2117b.png"
+      }
+    },
+    {
+      "uuid": "d0d2224a-89d2-46a6-8fb7-e4c9e0ae2b82",
+      "name": "Myth's EagMP",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.040Z",
+      "address": "wss://mc.theludos.com/",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "CREATIVE",
+        "SKYBLOCK",
+        "PVP",
+        "PVE",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "ea88f8be-816b-4134-ab42-c652dc57f748",
+        "id": 10,
+        "username": "_",
+        "avatar": "https://cdn.discordapp.com/avatars/741763420315189299/b426a11d1b748b861a0bdbc230fd3378.png"
+      }
+    },
+    {
+      "uuid": "0af42b52-5f20-47c5-aed0-4c9ea786d98d",
+      "name": "AcentraMC",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.737Z",
+      "address": "wss://play.acentramc.com",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "d288a80a-2068-47b3-96f7-73bdff709e8e",
+        "id": 4978,
+        "username": "dog",
+        "avatar": "https://cdn.discordapp.com/avatars/228314147698376706/187a8734f54796c544abcbabcc177ced.png"
+      }
+    },
+    {
+      "uuid": "c53bbb50-c5b8-4921-9d8d-ec541215f6c8",
+      "name": "SMGoro Server",
+      "verified": true,
+      "approved": true,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.193Z",
+      "address": "wss://mc.smgoro.com",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "MINIGAMES",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "e39d0b8a-12b4-47e6-8856-8f1ff238c8ac",
+        "id": 2594,
+        "username": "SummerGoro",
+        "avatar": "https://cdn.discordapp.com/avatars/573698085663014932/7a32fe6f552f9decb4fe0c373106f4bc.png"
+      }
+    },
+    {
+      "uuid": "48376e29-3380-4789-bb01-dff191a85f09",
+      "name": "✧✰.˚◦𓆩𝐌𝐚𝐧𝐢𝐚𝐒𝐌𝐏𓆪◦˚.✰✧",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.862Z",
+      "address": "wss://maniasmp.mooo.com",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "b5dabae0-f317-42a5-8acb-482f52dd7741",
+        "id": 10536,
+        "username": "ItzJay4kYT",
+        "avatar": "https://cdn.discordapp.com/avatars/1269015214263898174/92d4a8d4e6e44b040b3705ca8545b16d.png"
+      }
+    },
+    {
+      "uuid": "f05dbe6b-cb93-4bb4-aaed-c140d72431cc",
+      "name": "Wap+ Network",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.199Z",
+      "address": "wss://wapnetwork.store",
+      "votes": 0,
+      "tags": [
+        "SURVIVAL",
+        "PVP",
+        "MISCELLANEOUS",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "0acaa6d4-dcd3-4e41-999f-3e194b2bebc8",
+        "id": 726,
+        "username": "Space4Life",
+        "avatar": "https://cdn.discordapp.com/avatars/1204245722594025502/9de87d1a39069902f667f40c67a8c76e.png"
+      }
+    },
+    {
+      "uuid": "ed613a31-3fb7-4ff3-9487-a758f59248af",
+      "name": "Zentic Network ⚡ ​​🇩​​🇺​​🇪​​🇱​​🇸​ ﹢ ​🇸​​🇰​​🇾​​🇼​​🇦​​🇷​​🇸​ ﹢ ​🇧​​🇪​​🇩​​🇼​​🇦​​🇷​​🇸​",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 61
+      },
+      "lastPinged": "2025-03-14T00:02:39.024Z",
+      "address": "wss://zentic.cc",
+      "votes": 0,
+      "tags": [
+        "PVP",
+        "PVE",
+        "MINIGAMES",
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "7779723d-1417-47ff-820c-384dc101858e",
+        "id": 14,
+        "username": "dauts",
+        "avatar": "https://cdn.discordapp.com/avatars/378292233515958274/be03aa0e74c722276aaf4ec2505e0c15.png"
+      }
+    },
+    {
+      "uuid": "e79d2fa1-e149-41ab-9d88-d776deded778",
+      "name": "GalaxyPrisons",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 1
+      },
+      "lastPinged": "2025-03-14T00:02:38.558Z",
+      "address": "wss://play.galaxyprisons.com",
+      "votes": 0,
+      "tags": [
+        "SKYBLOCK",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "8cd7265b-1f59-4e9f-81a6-739f1b08d627",
+        "id": 98,
+        "username": "XSeries553",
+        "avatar": "https://cdn.discordapp.com/avatars/875170317524422677/36a6cfbdf3e8d56e93021bfc2b24168b.png"
+      }
+    },
+    {
+      "uuid": "77c875f5-b044-4420-adcc-c6ed2a725871",
+      "name": "CouchNet",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:38.918Z",
+      "address": "wss://couchnet.xyz",
+      "votes": 3,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "e888dae0-7d9a-47a4-9586-5338edb90144",
+        "id": 15538,
+        "username": "ᴛʜᴏᴜɢʜᴛᴢ",
+        "avatar": "https://cdn.discordapp.com/avatars/1330687622024269917/a65c77337c9023123fa1163f563f43ee.png"
+      }
+    },
+    {
+      "uuid": "14a56a4a-0046-43c2-b3e1-95b36f028b0f",
+      "name": "MessCraftX",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 35
+      },
+      "lastPinged": "2025-03-14T00:02:38.341Z",
+      "address": "wss://x.mess.eu.org",
+      "votes": 3,
+      "tags": [
+        "SKYBLOCK",
+        "CREATIVE",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "3dca6e88-e00c-45a8-a784-cb5d0a5f3117",
+        "id": 370,
+        "username": "Nervy",
+        "avatar": "https://cdn.discordapp.com/avatars/249481298480070658/9263de314351cc68199887db173dc438.png"
+      }
+    },
+    {
+      "uuid": "dd7bd9f7-f555-4466-a658-9415b439eca2",
+      "name": "WaterNetwork",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 16
+      },
+      "lastPinged": "2025-03-14T00:02:38.340Z",
+      "address": "wss://mc.waternett.online",
+      "votes": 2,
+      "tags": [
+        "PVP",
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "d35d8192-d721-4474-bcac-85722cd68485",
+        "id": 190,
+        "username": "SoloG",
+        "avatar": "https://cdn.discordapp.com/avatars/1037433833735340113/f596b46b60eac4e1aab66e7f390158bb.png"
+      }
+    },
+    {
+      "uuid": "db82a65e-b8b4-4257-a5dc-c34865276a5a",
+      "name": "AsianF4rmer",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.999Z",
+      "address": "wss://asianfarmer.lol",
+      "votes": 2,
+      "tags": [
+        "PVP",
+        "PVE",
+        "SURVIVAL",
+        "CREATIVE",
+        "SKYBLOCK",
+        "PRISON",
+        "RPG",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "682494d3-19dc-43bd-b61c-34ff230bf837",
+        "id": 617,
+        "username": "pov 2 comptia certifications",
+        "avatar": "https://cdn.discordapp.com/avatars/336721178813267969/9cfbac98bbefb780f722a4cad0ec7874.png"
+      }
+    },
+    {
+      "uuid": "e2228624-300c-4873-a600-255ffbc6d5aa",
+      "name": "Flame Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.726Z",
+      "address": "wss://firemc.usereverse.com/",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "MINIGAMES",
+        "PVE",
+        "PVP",
+        "RPG",
+        "MISCELLANEOUS",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "ba9ca525-4ff7-4461-9d55-9b1cdc035ffc",
+        "id": 11044,
+        "username": "! . * , DhyeyBG , * . !",
+        "avatar": "https://cdn.discordapp.com/avatars/1235656180333019216/5bd814a504941d130404b14ac1b2117b.png"
+      }
+    },
+    {
+      "uuid": "bc406f56-c93d-49a7-98e7-9d1269375c52",
+      "name": "Mazarca",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:38.915Z",
+      "address": "wss://eagler.maza64.xyz",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "CREATIVE",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "401da156-3e12-4708-8f15-2826468789ea",
+        "id": 8332,
+        "username": "maza",
+        "avatar": "https://cdn.discordapp.com/avatars/1217228917342208066/1f347a896615592fce26611af3542f48.png"
+      }
+    },
+    {
+      "uuid": "d0d2224a-89d2-46a6-8fb7-e4c9e0ae2b82",
+      "name": "Myth's EagMP",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.040Z",
+      "address": "wss://mc.theludos.com/",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "CREATIVE",
+        "SKYBLOCK",
+        "PVP",
+        "PVE",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "ea88f8be-816b-4134-ab42-c652dc57f748",
+        "id": 10,
+        "username": "_",
+        "avatar": "https://cdn.discordapp.com/avatars/741763420315189299/b426a11d1b748b861a0bdbc230fd3378.png"
+      }
+    },
+    {
+      "uuid": "f041a70c-fa82-4a78-a723-e9d16545a06f",
+      "name": "Jonarchy [ ANARCHY, SURVIVAL SMP, NO WORLD RESETS!]",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:39.319Z",
+      "address": "wss://eagler.donutsmo.net",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "PVP"
+      ],
+      "user": {
+        "uuid": "3ea45844-464e-431b-a668-37d49aa1b52c",
+        "id": 2769,
+        "username": "enucx",
+        "avatar": "https://cdn.discordapp.com/avatars/1130939018012545124/21eeae50128bfb6e3ed13d564d5e3ee5.png"
+      }
+    },
+    {
+      "uuid": "23f0946c-f68f-4ac6-a2e8-8df0c6efa40f",
+      "name": "AnarchMC",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 2
+      },
+      "lastPinged": "2025-03-14T00:02:39.680Z",
+      "address": "wss://web.aesthetiful.com",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "48ce4a10-526e-4974-9ec2-bc8f0c72c744",
+        "id": 1451,
+        "username": "WolfieGamerTvFan",
+        "avatar": "https://cdn.discordapp.com/avatars/729451686493552762/eab7597192292a8cb330795d15d65ede.png"
+      }
+    },
+    {
+      "uuid": "d739bf18-5ecc-4383-bddf-9f938f991242",
+      "name": "Expandion 1.5.2 RU",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:41.614Z",
+      "address": "wss://ec.expandion.su",
+      "votes": 1,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "SKYBLOCK",
+        "PVE",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "cd9d6404-319d-4e93-a5b7-2ec48fcd7e05",
+        "id": 13312,
+        "username": "Expandion",
+        "avatar": "https://cdn.discordapp.com/avatars/1182999191757275229/d2139645165a30cfda5686e342351e25.png"
+      }
+    },
+    {
+      "uuid": "5962ab30-7f43-4e6d-882f-ca760d895809",
+      "name": "Cracked PvP",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 50
+      },
+      "lastPinged": "2025-03-14T00:02:39.745Z",
+      "address": "wss://crackedpvp.club",
+      "votes": 59,
+      "tags": [
+        "PVP",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "6769ac39-bf46-4f60-a850-5cd4454fe732",
+        "id": 4234,
+        "username": "starified",
+        "avatar": "https://cdn.discordapp.com/avatars/460292773371707396/ec6b5c130b2eb75832d8fef71d8ce6a1.png"
+      }
+    },
+    {
+      "uuid": "92eda24f-2a72-4d82-bb4a-054fb4cf7440",
+      "name": "TitanNetwork",
+      "verified": true,
+      "approved": false,
+      "online": false,
+      "motd": null,
+      "lastPinged": "2025-03-14T00:02:43.201Z",
+      "address": "wss://eagler.titannetwork.top/",
+      "votes": 31,
+      "tags": [
+        "FACTIONS",
+        "PVP",
+        "PVE",
+        "MISCELLANEOUS",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "e43426b8-d3d7-4171-b2b6-84809c04b18a",
+        "id": 1663,
+        "username": "̷M̷a̷̷x̷ [LOA]",
+        "avatar": "https://cdn.discordapp.com/avatars/1191140042186436800/ba9c43c0a75dfbb834726591cd941dc6.png"
+      }
+    },
+    {
+      "uuid": "2f523963-9a30-4f54-b770-8c3f53c48fbd",
+      "name": "Shadow Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 2
+      },
+      "lastPinged": "2025-03-14T00:02:38.921Z",
+      "address": "wss://play.shadownetwork.shop",
+      "votes": 28,
+      "tags": [
+        "SKYBLOCK",
+        "MISCELLANEOUS",
+        "PVP",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "ead23e0a-9736-4a52-a130-3a63f4d65066",
+        "id": 1299,
+        "username": "Mr. Norshare",
+        "avatar": "https://cdn.discordapp.com/avatars/969002357503426590/59e37ea7416a462a9479ecaf1e9772e8.png"
+      }
+    },
+    {
+      "uuid": "9473d5b5-ebf5-480c-904e-8ace5ab2b835",
+      "name": "Thanatos-Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 3
+      },
+      "lastPinged": "2025-03-14T00:02:39.539Z",
+      "address": "wss://web.thanatos-network.xyz",
+      "votes": 15,
+      "tags": [
+        "SURVIVAL",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "d408d3a3-735a-47a3-9ce0-7cd2e528c5ba",
+        "id": 962,
+        "username": "Fr3ddy",
+        "avatar": "https://cdn.discordapp.com/avatars/900459912684007444/2a639845b37c7e09f35d78ec23dc094e.png"
+      }
+    },
+    {
+      "uuid": "a58f6482-c90b-4e3a-932f-edf3242a520c",
+      "name": "Fyrecraft: Season 3 [SERVER BACK AFTER POWER OUTAGE]",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:39.817Z",
+      "address": "wss://eagler.imcalledfyre.com",
+      "votes": 8,
+      "tags": [
+        "SURVIVAL",
+        "MISCELLANEOUS",
+        "PVP",
+        "PVE",
+        "MINIGAMES"
+      ],
+      "user": {
+        "uuid": "2b6fb9ee-feeb-4d22-b4a9-4297f7b0b252",
+        "id": 11310,
+        "username": "iDidTheLOLZ",
+        "avatar": "https://cdn.discordapp.com/avatars/1150189150759289004/c68ebc3e51004f18bd8944ff2b37d6ff.png"
+      }
+    },
+    {
+      "uuid": "109cc491-f9fa-4d5e-b9b7-72bec90bb58a",
+      "name": "SealCraft + NootServer",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 55
+      },
+      "lastPinged": "2025-03-14T00:02:39.643Z",
+      "address": "wss://mc.sealcentral.co",
+      "votes": 5,
+      "tags": [
+        "PVP",
+        "FACTIONS",
+        "SURVIVAL",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "4786648f-4ccd-49a7-a0cf-4c3a7413fbad",
+        "id": 10454,
+        "username": "999",
+        "avatar": "https://cdn.discordapp.com/avatars/374527067502673920/95b91af482446975e630077533da0f4b.png"
+      }
+    },
+    {
+      "uuid": "e415fce5-38fc-45e4-88de-855450f7537a",
+      "name": "CactusMC",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 0
+      },
+      "lastPinged": "2025-03-14T00:02:38.740Z",
+      "address": "wss://play.cactusmc.us",
+      "votes": 4,
+      "tags": [
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "ace8594c-b571-4c57-a1d5-2059793008b4",
+        "id": 750,
+        "username": "!   . *  ,        𝗣𝗿𝗲𝘀𝘁𝗼𝗻",
+        "avatar": "https://cdn.discordapp.com/avatars/730898397862559766/f224ee2c72836f18a8797950365a8049.png"
+      }
+    },
+    {
+      "uuid": "1ffdbd44-9532-41b3-b76a-195521b246aa",
+      "name": "mexicraft survival 1.8-1.12",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 1
+      },
+      "lastPinged": "2025-03-14T00:02:38.919Z",
+      "address": "wss://server.mexi.lol",
+      "votes": 4,
+      "tags": [
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "f5a74dc5-c96a-4b4c-ba3e-9eeb76a048b3",
+        "id": 20092,
+        "username": "htamixem",
+        "avatar": "https://cdn.discordapp.com/avatars/957004898602455090/3edb52552e71adb81192746180178c82.png"
+      }
+    },
+    {
+      "uuid": "fbf9261a-ce9f-4e36-b400-2567b6a41e73",
+      "name": "BlobCraft",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 39
+      },
+      "lastPinged": "2025-03-14T00:02:39.024Z",
+      "address": "wss://blobcraft.club",
+      "votes": 4,
+      "tags": [
+        "PVP"
+      ],
+      "user": {
+        "uuid": "c9c859f1-ceb5-4377-86de-ad0743a2f844",
+        "id": 116,
+        "username": "blobfish",
+        "avatar": "https://cdn.discordapp.com/avatars/398497716755234817/322951265ba3d5bb2fd0fd1bf40aa11f.png"
+      }
+    },
+    {
+      "uuid": "14a56a4a-0046-43c2-b3e1-95b36f028b0f",
+      "name": "MessCraftX",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 35
+      },
+      "lastPinged": "2025-03-14T00:02:38.341Z",
+      "address": "wss://x.mess.eu.org",
+      "votes": 3,
+      "tags": [
+        "SKYBLOCK",
+        "CREATIVE",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "3dca6e88-e00c-45a8-a784-cb5d0a5f3117",
+        "id": 370,
+        "username": "Nervy",
+        "avatar": "https://cdn.discordapp.com/avatars/249481298480070658/9263de314351cc68199887db173dc438.png"
+      }
+    },
+    {
+      "uuid": "12ee9ec1-9b81-4649-bb44-c977770acaad",
+      "name": "LampLifesteal",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 152
+      },
+      "lastPinged": "2025-03-14T00:01:33.720Z",
+      "address": "wss://mc.lamplifesteal.xyz",
+      "votes": 955,
+      "tags": [
+        "PVP",
+        "MISCELLANEOUS",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "03cd03b6-8c70-478d-8437-f89179a9ee7f",
+        "id": 44,
+        "username": "femlynx",
+        "avatar": "https://cdn.discordapp.com/avatars/831702228523155472/399d531e96ff4bbd75863e523ff286da.png"
+      }
+    },
+    {
+      "uuid": "7857227d-e384-4b3c-a553-105cae835382",
+      "name": "Rice Network",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 65
+      },
+      "lastPinged": "2025-03-14T00:01:33.614Z",
+      "address": "wss://mc.ricenetwork.xyz",
+      "votes": 631,
+      "tags": [
+        "MINIGAMES",
+        "SKYBLOCK",
+        "PVP",
+        "FACTIONS",
+        "RPG",
+        "PVE",
+        "MISCELLANEOUS",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "19bdf473-324b-4173-811c-efc9e7aba572",
+        "id": 21,
+        "username": "AirplaneGuy",
+        "avatar": "https://cdn.discordapp.com/avatars/1082062156687740948/ca99f484640b43a845e86628e947756b.png"
+      }
+    },
+    {
+      "uuid": "8048f2af-8db8-4b2f-bc49-cdd964becaf3",
+      "name": "KrypticMC",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 10
+      },
+      "lastPinged": "2025-03-14T00:01:33.630Z",
+      "address": "wss://eagler.krypticmc.net",
+      "votes": 497,
+      "tags": [
+        "PVP",
+        "MINIGAMES",
+        "MISCELLANEOUS",
+        "SURVIVAL",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "20a12a64-c985-447e-b3b7-9585aa29eb21",
+        "id": 17976,
+        "username": "rigbot",
+        "avatar": "https://cdn.discordapp.com/avatars/261678383920840705/778c9a4d1d60aa3c5cd3cf84e3270897.png"
+      }
+    },
+    {
+      "uuid": "917afa50-e369-4ba0-9d5f-e144cdb203cd",
+      "name": "ArchMC",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 697
+      },
+      "lastPinged": "2025-03-14T00:01:33.729Z",
+      "address": "wss://mc.arch.lol",
+      "votes": 399,
+      "tags": [
+        "PVP",
+        "MINIGAMES",
+        "SURVIVAL",
+        "CREATIVE",
+        "PRISON",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "9bca6976-fe8d-4732-970e-3c0fbfc60b11",
+        "id": 22,
+        "username": "professor",
+        "avatar": "https://cdn.discordapp.com/avatars/896185391701438494/9012055c461be3d914d44680cfdfc0aa.png"
+      }
+    },
+    {
+      "uuid": "0025a554-0a5d-4f5e-95da-98f2dda57766",
+      "name": "VanillaMC",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 61
+      },
+      "lastPinged": "2025-03-14T00:01:33.732Z",
+      "address": "wss://vanillamc.tech",
+      "votes": 320,
+      "tags": [
+        "PVP",
+        "FACTIONS",
+        "SURVIVAL"
+      ],
+      "user": {
+        "uuid": "07c242e9-081f-4467-a708-e8a6b2e1b888",
+        "id": 37,
+        "username": "luci",
+        "avatar": "https://cdn.discordapp.com/avatars/539843388606775306/db55d39c6ad29cc023125c45d66f3601.png"
+      }
+    },
+    {
+      "uuid": "7860e6d7-94e9-45d3-8ce2-2dd2d0e362ac",
+      "name": "Clever Teaching",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 72
+      },
+      "lastPinged": "2025-03-14T00:01:33.741Z",
+      "address": "wss://clever-teaching.com",
+      "votes": 275,
+      "tags": [
+        "SURVIVAL",
+        "CREATIVE",
+        "SKYBLOCK",
+        "PRISON",
+        "PVE",
+        "PVP",
+        "MINIGAMES",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "1717ecbc-848d-43ba-aafe-1b3f9ed36daf",
+        "id": 6,
+        "username": "AllforHim0064",
+        "avatar": "https://cdn.discordapp.com/avatars/522083658803445773/67a4929dc2b2e6b38f523204ab0d8047.png"
+      }
+    },
+    {
+      "uuid": "3b2e1a83-afa6-4a6e-9be0-1680931126e2",
+      "name": "Asspixel Network",
+      "verified": true,
+      "approved": true,
+      "online": true,
+      "motd": {
+        "online": 172
+      },
+      "lastPinged": "2025-03-14T00:01:33.532Z",
+      "address": "wss://mc.asspixel.net",
+      "votes": 157,
+      "tags": [
+        "PVP",
+        "PVE",
+        "MINIGAMES",
+        "SKYBLOCK"
+      ],
+      "user": {
+        "uuid": "f1204465-f57c-4250-ada5-99766c18cb80",
+        "id": 12,
+        "username": "FrenchToast",
+        "avatar": "https://cdn.discordapp.com/avatars/989192488818442290/0295997ab9fd9c3349bf722640e64b3f.png"
+      }
+    },
+    {
+      "uuid": "ad4f8bcd-c630-4e5a-aade-1576cf8de6b1",
+      "name": "ZelzNET",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 10
+      },
+      "lastPinged": "2025-03-14T00:01:33.746Z",
+      "address": "wss://play.zelz.net",
+      "votes": 96,
+      "tags": [
+        "SURVIVAL",
+        "PRISON",
+        "MISCELLANEOUS"
+      ],
+      "user": {
+        "uuid": "f8d741a0-4b61-478a-a9bd-7ee0e067d38b",
+        "id": 13076,
+        "username": "SaigeDev",
+        "avatar": "https://cdn.discordapp.com/avatars/1265927838318592083/37a7f55d27fb9df2e203044b224fd263.png"
+      }
+    },
+    {
+      "uuid": "ce541cdc-0392-466d-9241-c888e5614694",
+      "name": "Hyper Network",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 68
+      },
+      "lastPinged": "2025-03-14T00:01:33.726Z",
+      "address": "wss://eag.hyper-network.net",
+      "votes": 82,
+      "tags": [
+        "SURVIVAL",
+        "SKYBLOCK",
+        "MINIGAMES",
+        "PVP",
+        "MISCELLANEOUS",
+        "RPG",
+        "PVE"
+      ],
+      "user": {
+        "uuid": "70b72aa2-1568-4a5f-a418-205bcdfe34a5",
+        "id": 3342,
+        "username": "!  . *  , xUS4R",
+        "avatar": "https://cdn.discordapp.com/avatars/1145162693741916170/436102e73aa4f1ebae6a6ce8709fe816.png"
+      }
+    },
+    {
+      "uuid": "a067d5a7-536b-41f2-85cd-5dbe7f8d6ac5",
+      "name": "ZythMC",
+      "verified": true,
+      "approved": false,
+      "online": true,
+      "motd": {
+        "online": 38
+      },
+      "lastPinged": "2025-03-14T00:01:33.717Z",
+      "address": "wss://mc.zyth.me",
+      "votes": 79,
+      "tags": [
+        "MISCELLANEOUS",
+        "PVP",
+        "SURVIVAL",
+        "FACTIONS"
+      ],
+      "user": {
+        "uuid": "c835cb88-ee52-43df-b890-7f3546b4b5c2",
+        "id": 16,
+        "username": "zyth",
+        "avatar": "https://cdn.discordapp.com/avatars/1076710294082043926/87d5fc1d48cefc95a2f1e6089f04fd8f.png"
+      }
+	  }
+    ];
+
+    function renderServers(servers) {
+      const container = document.getElementById('server-container');
+      
+      servers.forEach(server => {
+        const serverElement = document.createElement('div');
+        serverElement.classList.add('server');
+
+        serverElement.innerHTML = `
+          <div class="server-header">
+            <img src="${server.user.avatar}" alt="${server.user.username} Avatar" class="server-avatar">
+            <div class="server-info">
+              <h3>${server.name}</h3>
+              <p>Username: ${server.user.username}</p>
+              <p>Verified: ${server.verified ? 'Yes' : 'No'}</p>
+              <p>Approved: ${server.approved ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+          <div class="tags">
+            ${server.tags.map(tag => `<div class="tag">${tag}</div>`).join('')}
+          </div>
+          <div class="server-footer">
+            <p>Votes: ${server.votes}</p>
+            <p>Address: ${server.address}</p>
+          </div>
+        `;
+
+        container.appendChild(serverElement);
+      });
+    }
+
+    // Call the render function with the data
+    renderServers(data);
+  </script>
+
+</body>
+</html>
