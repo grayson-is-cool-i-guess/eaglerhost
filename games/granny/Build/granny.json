@@ -1,0 +1,16 @@
+{
+"companyName": "DefaultCompany",
+"productName": "granny tuff",
+"dataUrl": "granny.data.unityweb",
+"wasmCodeUrl": "granny.wasm.code.unityweb",
+"wasmFrameworkUrl": "granny.wasm.framework.unityweb",
+"asmCodeUrl": "granny.asm.code.unityweb",
+"asmMemoryUrl": "granny.asm.memory.unityweb",
+"asmFrameworkUrl": "granny.asm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"}
+}
